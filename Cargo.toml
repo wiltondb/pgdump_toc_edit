@@ -1,0 +1,14 @@
+[package]
+name = "pgdump_toc_edit"
+version = "1.0.0"
+authors = ["alex@staticlibs.net"]
+edition = "2018"
+
+[dependencies]
+chrono = "0.4.30"
+clap = "4.4.10"
+flate2 = "1.0.28"
+sqlparser = "0.40.0"
+
+
+
