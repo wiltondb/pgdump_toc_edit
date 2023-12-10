@@ -15,6 +15,7 @@
  */
 
 use std::collections::HashMap;
+use std::collections::HashSet;
 use std::fmt;
 use std::fs;
 use std::fs::File;
@@ -46,7 +47,7 @@ struct TocEntry {
     tag: Option<Vec<u8>>,
     description: Option<Vec<u8>>,
     section: i32,
-    defn: Option<Vec<u8>>,
+    create_stmt: Option<Vec<u8>>,
     drop_stmt: Option<Vec<u8>>,
     copy_stmt: Option<Vec<u8>>,
     namespace: Option<Vec<u8>>,
@@ -58,6 +59,40 @@ struct TocEntry {
     filename: Option<Vec<u8>>,
 }
 
+impl TocEntry {
+    fn tag(&self) -> String {
+        binopt_to_string(&self.tag)
+    }
+
+    fn description(&self) -> String {
+        binopt_to_string(&self.description)
+    }
+
+    fn create_stmt(&self) -> String {
+        binopt_to_string(&self.create_stmt)
+    }
+
+    fn drop_stmt(&self) -> String {
+        binopt_to_string(&self.drop_stmt)
+    }
+
+    fn copy_stmt(&self) -> String {
+        binopt_to_string(&self.copy_stmt)
+    }
+
+    fn namespace(&self) -> String {
+        binopt_to_string(&self.namespace)
+    }
+
+    fn owner(&self) -> String {
+        binopt_to_string(&self.owner)
+    }
+
+    fn filename(&self) -> String {
+        binopt_to_string(&self.filename)
+    }
+}
+
 impl fmt::Display for TocEntry {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         writeln!(f, "dump_id: {}", self.dump_id)?;
@@ -67,7 +102,7 @@ impl fmt::Display for TocEntry {
         writeln!(f, "tag: {}", binopt_to_string(&self.tag))?;
         writeln!(f, "description: {}", binopt_to_string(&self.description))?;
         writeln!(f, "section: {}", self.section)?;
-        writeln!(f, "create_stmt: {}", binopt_to_string(&self.defn))?;
+        writeln!(f, "create_stmt: {}", binopt_to_string(&self.create_stmt))?;
         writeln!(f, "drop_stmt: {}", binopt_to_string(&self.drop_stmt))?;
         writeln!(f, "copy_stmt: {}", binopt_to_string(&self.copy_stmt))?;
         writeln!(f, "namespace: {}", binopt_to_string(&self.namespace))?;
@@ -79,6 +114,26 @@ impl fmt::Display for TocEntry {
             writeln!(f, "dep {}: {}", i + 1, binopt_to_string(&Some(self.deps[i].clone())))?;
         }
         writeln!(f, "filename: {}", binopt_to_string(&self.filename))
+    }
+}
+
+#[derive(Default, Debug, Clone)]
+struct TocCtx {
+    postgres_dbname: String,
+    orig_dbname: String,
+    orig_dbname_with_underscore: String,
+    dest_dbname: String,
+    schemas: HashMap<String, String>,
+    owners: HashMap<String, String>,
+    catalog_files: Vec<String>
+}
+
+impl TocCtx {
+    fn new(dbname: &str) -> Self {
+        Self {
+            dest_dbname: dbname.to_string(),
+            ..Default::default()
+        }
     }
 }
 
@@ -141,7 +196,7 @@ fn read_flags<R: Read>(reader: &mut R) -> Result<Vec<u8>, io::Error> {
 }
 
 fn copy_flags<R: Read, W: Write>(reader: &mut R, writer: &mut W) -> Result<(), io::Error> {
-    let mut buf = read_flags(reader)?;
+    let buf = read_flags(reader)?;
     writer.write_all(&buf)?;
     Ok(())
 }
@@ -321,7 +376,7 @@ fn read_toc_entry<R: Read>(reader: &mut R) -> Result<TocEntry, io::Error> {
         tag,
         description,
         section,
-        defn,
+        create_stmt: defn,
         drop_stmt,
         copy_stmt,
         namespace,
@@ -342,7 +397,7 @@ fn write_toc_entry<W: Write>(writer: &mut W, te: &TocEntry) -> Result<(), io::Er
     write_string_opt(writer, &te.tag)?;
     write_string_opt(writer, &te.description)?;
     write_int(writer, te.section)?;
-    write_string_opt(writer, &te.defn)?;
+    write_string_opt(writer, &te.create_stmt)?;
     write_string_opt(writer, &te.drop_stmt)?;
     write_string_opt(writer, &te.copy_stmt)?;
     write_string_opt(writer, &te.namespace)?;
@@ -370,8 +425,7 @@ fn copy_header<R: Read, W: Write>(reader: &mut R, writer: &mut W) -> Result<(), 
     Ok(())
 }
 
-fn rewrite_table(dir_path_st: &str, filename: &str, orig_dbname: &str, dbname: &str) -> Result<(), io::Error> {
-    let dir_path = Path::new(dir_path_st);
+fn rewrite_table(dir_path: &Path, filename: &str, orig_dbname: &str, dbname: &str) -> Result<(), io::Error> {
     let file_src_path = dir_path.join(format!("{}.gz", filename));
     let file_dest_path = dir_path.join(format!("{}.rewritten.gz", filename));
     {
@@ -399,7 +453,7 @@ fn rewrite_table(dir_path_st: &str, filename: &str, orig_dbname: &str, dbname: &
     Ok(())
 }
 
-fn rewrite_dbname_in_tables(map: &HashMap<String, String>, dir_path: &str, orig_dbname: &str, dbname: &str) -> Result<(), io::Error> {
+fn rewrite_dbname_in_tables(map: &HashMap<String, String>, dir_path: &Path, orig_dbname: &str, dbname: &str) -> Result<(), io::Error> {
     let babelfish_authid_user_ext_filename = match map.get("babelfish_authid_user_ext") {
         Some(name) => name,
         None => return Err(io::Error::new(io::ErrorKind::Other, "Table not found: babelfish_authid_user_ext"))
@@ -510,9 +564,243 @@ fn replace_dbname_in_namespace(namespace_opt: &Option<Vec<u8>>, orig_dbname: &st
     Some(rewritten.into_bytes())
 }
 
-fn modify_toc_entry(te: &mut TocEntry, orig_dbname: &str, dbname: &str) {
-    if orig_dbname.is_empty() {
-        return;
+// todo: +1 
+fn location_to_idx(lines: &Vec<&str>, line_no: u64, column_no: u64) -> usize {
+    let mut res = 0usize;
+    for i in 0..line_no - 1 {
+        res += lines[i as usize].len();
+        if i > 0 {
+            res += 1;
+        }
+    }
+    res += (column_no - 1) as usize;
+    res
+}
+
+fn replace_schema_in_sql(schemas: &HashMap<String, String>, sql: &str, qualified_only: bool) -> Result<String, io::Error> {
+    use sqlparser::dialect::GenericDialect;
+    use sqlparser::tokenizer::Location;
+    use sqlparser::tokenizer::Token;
+    use sqlparser::tokenizer::Tokenizer;
+    use sqlparser::tokenizer::TokenWithLocation;
+
+    let dialect = GenericDialect {};
+    let lines: Vec<&str> = sql.split('\n').collect();
+    let tokens = match Tokenizer::new(&dialect, sql).tokenize_with_location() {
+        Ok(tokens) => tokens,
+        Err(e) => return Err(io::Error::new(io::ErrorKind::Other, format!(
+            "Tokenizer error: {}, sql: {}", e, sql)))
+    };
+    let mut to_replace: Vec<(&str, &str, &Location)> = Vec::new();
+    for i in 0..tokens.len() {
+        if qualified_only {
+            if i >= tokens.len() - 1 {
+                continue;
+            }
+            let TokenWithLocation{ token, location } = &tokens[i + 1];
+            if let Token::Period = token {
+                // success
+            } else {
+                continue;
+            }
+        }
+        let TokenWithLocation{ token, location } = &tokens[i];
+        if let Token::Word(word) = token {
+            if let Some(schema) = schemas.get(&word.value) {
+                to_replace.push((&word.value, schema, &location));
+            }
+        }
+    }
+
+    let orig: Vec<char> = sql.chars().collect();
+    let mut rewritten: Vec<char> = Vec::new();
+    let mut last_idx = 0;
+    for (schema_orig, schema_replaced, loc) in to_replace {
+        let start_idx = location_to_idx(&lines, loc.line, loc.column);
+        println!("{}", start_idx);
+        for i in last_idx..start_idx {
+            rewritten.push(orig[i]);
+        }
+        for ch in schema_replaced.chars() {
+            rewritten.push(ch);
+        }
+        last_idx = start_idx + schema_orig.len();
+    }
+
+    // tail
+    for i in last_idx..orig.len() {
+        rewritten.push(orig[i]);
+    }
+
+    let res: String = rewritten.into_iter().collect();
+    println!("{}", sql);
+    println!("{}", res);
+    Ok(res)
+}
+
+fn replace_schema_opt(schemas: &HashMap<String, String>, sql: &Option<Vec<u8>>, qualified_only: bool) -> Result<Option<Vec<u8>>, io::Error> {
+    if sql.is_none() {
+        return Ok(None)
+    };
+    let sql_st = binopt_to_string(sql);
+    let sql_rewritten = replace_schema_in_sql(schemas, &sql_st, qualified_only)?;
+    Ok(Some(sql_rewritten.into_bytes()))
+}
+
+fn replace_create_stmt(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    te.create_stmt = replace_schema_opt(&ctx.schemas, &te.create_stmt, true)?;
+    Ok(())
+}
+
+fn replace_create_stmt_unqualified(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    te.create_stmt = replace_schema_opt(&ctx.schemas, &te.create_stmt, false)?;
+    Ok(())
+}
+
+fn replace_drop_stmt(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    te.drop_stmt = replace_schema_opt(&ctx.schemas, &te.drop_stmt, true)?;
+    Ok(())
+}
+
+fn replace_drop_stmt_unqualified(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    te.drop_stmt = replace_schema_opt(&ctx.schemas, &te.drop_stmt, false)?;
+    Ok(())
+}
+
+fn replace_tag(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    te.tag = replace_schema_opt(&ctx.schemas, &te.tag, true)?;
+    Ok(())
+}
+
+fn replace_tag_unqualified(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    te.tag = replace_schema_opt(&ctx.schemas, &te.tag, false)?;
+    Ok(())
+}
+
+fn replace_owner(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    if let Some(replaced) = ctx.owners.get(&te.owner()) {
+        te.owner = Some(replaced.clone().into_bytes());
+    };
+    Ok(())
+}
+
+fn replace_namespace(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    if let Some(replaced) = ctx.schemas.get(&te.namespace()) {
+        te.namespace = Some(replaced.clone().into_bytes());
+    };
+    Ok(())
+}
+
+fn modify_schema_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    let schema_orig = te.tag();
+    let dbo_suffix = "_dbo";
+    if ctx.orig_dbname.is_empty() {
+        if schema_orig.ends_with(dbo_suffix) {
+            ctx.orig_dbname = schema_orig.chars().take(schema_orig.len() - dbo_suffix.len()).collect();
+            ctx.orig_dbname_with_underscore = format!("{}_", &ctx.orig_dbname);
+        } else {
+            return Err(io::Error::new(io::ErrorKind::Other, "Cannot determine schema name"))
+        }
+    }
+    if !schema_orig.starts_with(&ctx.orig_dbname_with_underscore) {
+        return Err(io::Error::new(io::ErrorKind::Other, format!("Unexpected schema name: {}", schema_orig)));
+    }
+    let schema_suffix = schema_orig.chars().skip(ctx.orig_dbname_with_underscore.len()).collect::<String>();
+    let schema_dest = format!("{}_{}", ctx.dest_dbname, schema_suffix);
+    ctx.schemas.insert(schema_orig.clone(), schema_dest.clone());
+    te.tag = Some(schema_dest.into_bytes());
+
+    let owner_orig = te.owner();
+    if owner_orig.starts_with(&ctx.orig_dbname_with_underscore) {
+        let owner_suffix = owner_orig.chars().skip(ctx.orig_dbname_with_underscore.len()).collect::<String>();
+        let owner_dest = format!("{}_{}", ctx.dest_dbname, owner_suffix);
+        ctx.owners.insert(owner_orig.clone(), owner_dest.clone());
+        te.owner = Some(owner_dest.into_bytes());
+    }
+
+    replace_create_stmt_unqualified(ctx, te)?;
+    replace_drop_stmt_unqualified(ctx, te)?;
+
+    Ok(())
+}
+
+fn modify_schema_acl_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    replace_tag_unqualified(ctx, te)?;
+    replace_create_stmt_unqualified(ctx, te)?;
+    replace_owner(ctx, te);
+    Ok(())
+}
+
+fn modify_acl_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    replace_tag(ctx, te)?;
+    replace_create_stmt(ctx, te)?;
+    replace_namespace(ctx, te);
+    replace_owner(ctx, te);
+    Ok(())
+}
+
+fn modify_domain_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    replace_create_stmt(ctx, te)?;
+    replace_drop_stmt(ctx, te)?;
+    replace_namespace(ctx, te);
+    replace_owner(ctx, te);
+    Ok(())
+}
+
+fn modify_function_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    replace_tag(ctx, te)?;
+    replace_create_stmt(ctx, te)?;
+    replace_drop_stmt(ctx, te)?;
+    replace_namespace(ctx, te);
+    replace_owner(ctx, te);
+    Ok(())
+}
+
+fn modify_table_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    replace_create_stmt(ctx, te)?;
+    replace_drop_stmt(ctx, te)?;
+    replace_namespace(ctx, te);
+    replace_owner(ctx, te);
+    Ok(())
+}
+
+fn modify_procedure_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    replace_tag(ctx, te)?;
+    replace_create_stmt(ctx, te)?;
+    replace_drop_stmt(ctx, te)?;
+    replace_namespace(ctx, te);
+    replace_owner(ctx, te);
+    Ok(())
+}
+
+fn modify_toc_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    let tag = te.tag();
+    let description = te.description();
+    if "SCHEMA" == description {
+        modify_schema_entry(ctx, te)?;
+    } else if "ACL" == description {
+        if tag.starts_with("SCHEMA ") {
+            modify_schema_acl_entry(ctx, te)?;
+        } else {
+            modify_acl_entry(ctx, te)?;
+        }
+    } else if "DOMAIN" == description {
+        modify_domain_entry(ctx, te)?;
+    } else if "FUNCTION" == description {
+        modify_function_entry(ctx, te)?;
+    } else if "TABLE" == description {
+        modify_table_entry(ctx, te)?;
+    } else if "PROCEDURE" == description {
+        modify_procedure_entry(ctx, te)?;
+    }
+
+    Ok(())
+    /*
+    if te_tag.ends_with("_dbo") && te_description == "SCHEMA" {
+        orig_dbname = te_tag.chars().take(te_tag.len() - "_dbo".len()).collect();
+    }
+    if !te_filename.is_empty() {
+        filenames.insert(te_tag, te_filename);
     }
     // todo: removeme
     //println!("=========================================");
@@ -526,6 +814,7 @@ fn modify_toc_entry(te: &mut TocEntry, orig_dbname: &str, dbname: &str) {
     te.tag = replace_dbname_in_tag(&te.tag, orig_dbname, dbname);
     //println!("=========================================");
     // end: removeme
+     */
 }
 
 pub fn print_toc<W: Write>(toc_path: &str, writer: &mut W) -> Result<(), io::Error> {
@@ -558,9 +847,12 @@ pub fn print_toc<W: Write>(toc_path: &str, writer: &mut W) -> Result<(), io::Err
     Ok(())
 }
 
-pub fn rewrite_toc(dir_path_st: &str, dbname: &str) -> Result<(), io::Error> {
-    let dir_path = Path::new(dir_path_st);
-    let toc_src_path = dir_path.join(Path::new("toc.dat"));
+pub fn rewrite_toc(toc_path: &str, dbname: &str) -> Result<(), io::Error> {
+    let toc_src_path = Path::new(toc_path);
+    let dir_path = match toc_src_path.canonicalize()?.parent() {
+        Some(parent) => parent.to_path_buf(),
+        None => return Err(io::Error::new(io::ErrorKind::Other, "Error accessing dump directory"))
+    };
     let toc_dest_path = dir_path.join(Path::new("toc_rewritten.dat"));
     let toc_src = File::open(&toc_src_path)?;
     let mut reader = BufReader::new(toc_src);
@@ -569,28 +861,18 @@ pub fn rewrite_toc(dir_path_st: &str, dbname: &str) -> Result<(), io::Error> {
 
     copy_header(&mut reader, &mut writer)?;
     let toc_count = copy_int(&mut reader, &mut writer)?;
-    let mut map: HashMap<String, String> = HashMap::new();
-    let mut orig_dbname = "".to_string();
+    let mut ctx = TocCtx::new(&dbname);
     for _ in 0..toc_count {
         let mut te  = read_toc_entry(&mut reader)?;
-        let te_tag = binopt_to_string(&te.tag);
-        let te_description = binopt_to_string(&te.description);
-        let te_filename = binopt_to_string(&te.filename);
-        if te_tag.ends_with("_dbo") && te_description == "SCHEMA" {
-            orig_dbname = te_tag.chars().take(te_tag.len() - "_dbo".len()).collect();
-        }
-        if !te_filename.is_empty() {
-            map.insert(te_tag, te_filename);
-        }
-        modify_toc_entry(&mut te, &orig_dbname, dbname);
+        modify_toc_entry(&mut ctx, &mut te)?;
         write_toc_entry(&mut writer, &te)?;
     }
-    rewrite_dbname_in_tables(&map, dir_path_st, &orig_dbname, dbname)?;
+    // todo
+    //rewrite_dbname_in_tables(&ctx.filenames, dir_path.as_path(), &ctx.orig_dbname, dbname)?;
 
-    let toc_orig_path = dir_path.join("toc.dat.orig");
-    fs::rename(&toc_src_path, &toc_orig_path)?;
-    fs::rename(&toc_dest_path, &toc_src_path)?;
-
+    //let toc_orig_path = dir_path.join("toc.dat.orig");
+    //fs::rename(&toc_src_path, &toc_orig_path)?;
+    //fs::rename(&toc_dest_path, &toc_src_path)?;
 
     Ok(())
 }

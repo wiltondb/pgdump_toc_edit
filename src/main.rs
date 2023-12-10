@@ -88,6 +88,11 @@ RESET babelfishpg_tsql.restore_tsql_tabletype;
 
     if print {
         let _ = pgdump_toc_edit::print_toc(&toc_file, &mut io::stdout());
+        return;
+    }
+
+    if let Some(name) = dbname {
+        pgdump_toc_edit::rewrite_toc(&toc_file, &name);
     }
 
 }
