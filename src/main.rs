@@ -92,7 +92,10 @@ RESET babelfishpg_tsql.restore_tsql_tabletype;
     }
 
     if let Some(name) = dbname {
-        pgdump_toc_edit::rewrite_toc(&toc_file, &name);
+        match pgdump_toc_edit::rewrite_toc(&toc_file, &name) {
+            Ok(_) => {},
+            Err(e) => panic!("{}", e)
+        }
     }
 
 }

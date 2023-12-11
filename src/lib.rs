@@ -15,7 +15,6 @@
  */
 
 use std::collections::HashMap;
-use std::collections::HashSet;
 use std::fmt;
 use std::fs;
 use std::fs::File;
@@ -37,6 +36,15 @@ use flate2::Compression;
 const LINE_ENDING: &'static str = "\r\n";
 #[cfg(not(windows))]
 const LINE_ENDING: &'static str = "\n";
+
+
+#[derive(Default, Debug, Clone)]
+struct TocHeader {
+    compression: i32,
+    postgres_dbname: String,
+    version_server: String,
+    version_pgdump: String
+}
 
 #[derive(Default, Debug, Clone)]
 struct TocEntry {
@@ -66,18 +74,6 @@ impl TocEntry {
 
     fn description(&self) -> String {
         binopt_to_string(&self.description)
-    }
-
-    fn create_stmt(&self) -> String {
-        binopt_to_string(&self.create_stmt)
-    }
-
-    fn drop_stmt(&self) -> String {
-        binopt_to_string(&self.drop_stmt)
-    }
-
-    fn copy_stmt(&self) -> String {
-        binopt_to_string(&self.copy_stmt)
     }
 
     fn namespace(&self) -> String {
@@ -119,20 +115,29 @@ impl fmt::Display for TocEntry {
 
 #[derive(Default, Debug, Clone)]
 struct TocCtx {
-    postgres_dbname: String,
+    header: TocHeader,
     orig_dbname: String,
     orig_dbname_with_underscore: String,
     dest_dbname: String,
     schemas: HashMap<String, String>,
     owners: HashMap<String, String>,
-    catalog_files: Vec<String>
+    catalog_files: HashMap<String, String>
 }
 
 impl TocCtx {
-    fn new(dbname: &str) -> Self {
+    fn new(header: TocHeader, dbname: &str) -> Self {
         Self {
+            header,
             dest_dbname: dbname.to_string(),
             ..Default::default()
+        }
+    }
+
+    fn catalog_filename(&self, bbf_catalog: &str) -> Result<String, io::Error> {
+        match self.catalog_files.get(bbf_catalog) {
+            Some(fname) => Ok(fname.clone()),
+            None => return Err(io::Error::new(io::ErrorKind::Other, format!(
+                "Catalog table not found: {}", bbf_catalog)))
         }
     }
 }
@@ -352,7 +357,7 @@ fn read_toc_entry<R: Read>(reader: &mut R) -> Result<TocEntry, io::Error> {
     let tag = read_string_opt(reader)?;
     let description = read_string_opt(reader)?;
     let section = read_int(reader)?;
-    let defn = read_string_opt(reader)?;
+    let create_stmt = read_string_opt(reader)?;
     let drop_stmt = read_string_opt(reader)?;
     let copy_stmt = read_string_opt(reader)?;
     let namespace = read_string_opt(reader)?;
@@ -376,7 +381,7 @@ fn read_toc_entry<R: Read>(reader: &mut R) -> Result<TocEntry, io::Error> {
         tag,
         description,
         section,
-        create_stmt: defn,
+        create_stmt,
         drop_stmt,
         copy_stmt,
         namespace,
@@ -413,166 +418,175 @@ fn write_toc_entry<W: Write>(writer: &mut W, te: &TocEntry) -> Result<(), io::Er
     Ok(())
 }
 
-fn copy_header<R: Read, W: Write>(reader: &mut R, writer: &mut W) -> Result<(), io::Error> {
+fn copy_header<R: Read, W: Write>(reader: &mut R, writer: &mut W) -> Result<TocHeader, io::Error> {
     copy_magic(reader, writer)?;
     copy_version(reader, writer)?;
     copy_flags(reader, writer)?;
-    let _comp = copy_int(reader, writer)?;
+    let compression = copy_int(reader, writer)?;
     let _timestamp = copy_timestamp(reader, writer)?;
-    let _dbname = copy_string(reader, writer)?;
-    let _version_server = copy_string(reader, writer)?;
-    let _version_pgdump = copy_string(reader, writer)?;
-    Ok(())
+    let postgres_dbname = copy_string(reader, writer)?;
+    let version_server = copy_string(reader, writer)?;
+    let version_pgdump = copy_string(reader, writer)?;
+    Ok(TocHeader {
+        compression,
+        postgres_dbname,
+        version_server,
+        version_pgdump
+    })
 }
 
-fn rewrite_table(dir_path: &Path, filename: &str, orig_dbname: &str, dbname: &str) -> Result<(), io::Error> {
-    let file_src_path = dir_path.join(format!("{}.gz", filename));
-    let file_dest_path = dir_path.join(format!("{}.rewritten.gz", filename));
-    {
-        let reader = BufReader::new(GzDecoder::new(BufReader::new(File::open(&file_src_path)?)));
-        let mut writer = GzEncoder::new(BufWriter::new(File::create(&file_dest_path)?), Compression::default());
-        for ln in reader.lines() {
-            let line = ln?;
-            let mut parts_replaced: Vec<String> = Vec::new();
-            for part in line.split('\t') {
-                let val = if part.starts_with(orig_dbname) {
-                    part.replace(orig_dbname, dbname)
-                } else {
-                    part.to_string()
-                };
-                parts_replaced.push(val);
+fn rewrite_table<F: Fn(Vec<String>) -> Result<Vec<String>, io::Error>>(dir_path: &Path, filename: &str, compression: i32, line_by_line: bool, fun: F) -> Result<(), io::Error> {
+    let rewrite_line = |line: String| -> Result<String, io::Error> {
+        let res = if "\\." == line || line.is_empty() {
+            line
+        } else {
+            let parts = line.split('\t').map(|st| st.to_string()).collect();
+            let parts_replaced = fun(parts)?;
+            parts_replaced.join("\t")
+        };
+        Ok(res)
+    };
+    let mut src_path = dir_path.join(format!("{}", filename));
+    let mut dest_path = dir_path.join(format!("{}.rewritten", filename));
+    let mut orig_path = dir_path.join(format!("{}.orig", filename));
+    if compression > 0 {
+        for path in vec!(&mut src_path, &mut dest_path, &mut orig_path).iter_mut() {
+            path.push(".gz");
+        }
+        let mut reader = BufReader::new(GzDecoder::new(BufReader::new(File::open(&src_path)?)));
+        let mut writer = GzEncoder::new(BufWriter::new(File::create(&dest_path)?), Compression::new(compression as u32));
+        if line_by_line {
+            for ln in reader.lines() {
+                let line = ln?;
+                let rewritten = rewrite_line(line)?;
+                writer.write_all(rewritten.as_bytes())?;
+                writer.write_all("\n".as_bytes())?;
             }
-            let line_replaced = parts_replaced.join("\t");
-            writer.write_all(line_replaced.as_bytes())?;
-            writer.write_all("\n".as_bytes())?;
+        } else {
+            let mut text = String::new();
+            let _ = reader.read_to_string(&mut text)?;
+            let single = vec!(text);
+            let rewritten_vec = fun(single)?;
+            writer.write_all(&rewritten_vec[0].as_bytes())?;
+        }
+    } else {
+        let mut reader = BufReader::new(File::open(&src_path)?);
+        let mut writer = BufWriter::new(File::create(&dest_path)?);
+        if line_by_line {
+            for ln in reader.lines() {
+                let line = ln?;
+                let rewritten = rewrite_line(line)?;
+                writer.write_all(rewritten.as_bytes())?;
+                writer.write_all("\n".as_bytes())?;
+            }
+        } else {
+            let mut text = String::new();
+            let _ = reader.read_to_string(&mut text)?;
+            let single = vec!(text);
+            let rewritten_vec = fun(single)?;
+            writer.write_all(&rewritten_vec[0].as_bytes())?;
         }
     }
-    let file_orig_path = dir_path.join(format!("{}.orig.gz", filename));
-    fs::rename(&file_src_path, &file_orig_path)?;
-    fs::rename(&file_dest_path, &file_src_path)?;
+    fs::rename(&src_path, &orig_path)?;
+    fs::rename(&dest_path, &src_path)?;
     Ok(())
 }
 
-fn rewrite_dbname_in_tables(map: &HashMap<String, String>, dir_path: &Path, orig_dbname: &str, dbname: &str) -> Result<(), io::Error> {
-    let babelfish_authid_user_ext_filename = match map.get("babelfish_authid_user_ext") {
-        Some(name) => name,
-        None => return Err(io::Error::new(io::ErrorKind::Other, "Table not found: babelfish_authid_user_ext"))
+fn replace_record_rolname(ctx: &TocCtx, rec: &mut Vec<String>, idx: usize) -> Result<(), io::Error> {
+    let rolname = &rec[idx];
+    if let Some(replaced) = ctx.owners.get(rolname) {
+        rec[idx] = replaced.clone();
     };
-    rewrite_table(dir_path, babelfish_authid_user_ext_filename, orig_dbname, dbname)?;
-
-    let babelfish_function_ext_filename = match map.get("babelfish_function_ext") {
-        Some(name) => name,
-        None => return Err(io::Error::new(io::ErrorKind::Other, "Table not found: babelfish_function_ext"))
-    };
-    rewrite_table(dir_path, babelfish_function_ext_filename, orig_dbname, dbname)?;
-
-    let babelfish_namespace_ext_filename = match map.get("babelfish_namespace_ext") {
-        Some(name) => name,
-        None => return Err(io::Error::new(io::ErrorKind::Other, "Table not found: babelfish_namespace_ext"))
-    };
-    rewrite_table(dir_path, babelfish_namespace_ext_filename, orig_dbname, dbname)?;
-
-    let babelfish_sysdatabases_filename = match map.get("babelfish_sysdatabases") {
-        Some(name) => name,
-        None => return Err(io::Error::new(io::ErrorKind::Other, "Table not found: babelfish_sysdatabases"))
-    };
-    rewrite_table(dir_path, babelfish_sysdatabases_filename, orig_dbname, dbname)?;
     Ok(())
 }
 
-fn replace_dbname(te: &TocEntry, opt: &Option<Vec<u8>>, orig_dbname: &str, dbname: &str, can_add_dot: bool) -> Option<Vec<u8>> {
-    if opt.is_none() {
-        return None;
-    }
-    let te_tag = binopt_to_string(&te.tag);
-    let mut needle_dbo = format!("{}_dbo", orig_dbname);
-    let mut replacement_dbo = format!("{}_dbo", dbname);
-    let mut needle_db_owner = format!("{}_db_owner", orig_dbname);
-    let mut replacement_db_owner = format!("{}_db_owner", dbname);
-    let mut needle_guest = format!("{}_guest", orig_dbname);
-    let mut replacement_guest = format!("{}_guest", dbname);
-    if  can_add_dot &&
-        te_tag != format!("{}_dbo", &orig_dbname) &&
-        te_tag != format!("SCHEMA {}_dbo", &orig_dbname) &&
-        te_tag != format!("{}_guest", &orig_dbname) &&
-        te_tag != format!("SCHEMA {}_guest", &orig_dbname)
-    {
-        needle_dbo.push('.');
-        replacement_dbo.push('.');
-        needle_db_owner.push('.');
-        replacement_db_owner.push('.');
-        needle_guest.push('.');
-        replacement_guest.push('.');
+fn replace_record_schema(ctx: &TocCtx, rec: &mut Vec<String>, idx: usize) -> Result<(), io::Error> {
+    let schema = &rec[idx];
+    if let Some(replaced) = ctx.schemas.get(schema) {
+        rec[idx] = replaced.clone();
     };
-    let res = binopt_to_string(opt)
-        .replace(&needle_dbo, &replacement_dbo)
-        .replace(&needle_db_owner, &replacement_db_owner)
-        .replace(&needle_guest, &replacement_guest);
-    Some(res.into_bytes())
+    Ok(())
 }
 
-fn replace_dbname_in_tag(tag_opt: &Option<Vec<u8>>, orig_dbname: &str, dbname: &str) -> Option<Vec<u8>> {
-    if tag_opt.is_none() {
-        return None;
-    }
-    let tag = binopt_to_string(tag_opt);
-    let rewritten = if tag == format!("{}_dbo", &orig_dbname) {
-        format!("{}_dbo", &dbname)
-    } else if tag == format!("SCHEMA {}_dbo", &orig_dbname) {
-        format!("SCHEMA {}_dbo", &dbname)
-    } else if tag == format!("{}_guest", &orig_dbname) {
-        format!("{}_guest", &dbname)
-    } else if tag == format!("SCHEMA {}_guest", &orig_dbname) {
-        format!("SCHEMA {}_guest", &dbname)
-    } else {
-        tag
-    };
-    Some(rewritten.into_bytes())
+fn replace_record_schema_in_signature(ctx: &TocCtx, rec: &mut Vec<String>, idx: usize) -> Result<(), io::Error> {
+    let sig = &rec[idx];
+    let replaced = replace_schema_in_sql(&ctx.schemas, sig, true)?;
+    rec[idx] = replaced;
+    Ok(())
 }
 
-fn replace_dbname_in_owner(owner_opt: &Option<Vec<u8>>, orig_dbname: &str, dbname: &str) -> Option<Vec<u8>> {
-    if owner_opt.is_none() {
-        return None;
+fn replace_record_dbname(ctx: &TocCtx, rec: &mut Vec<String>, idx: usize) -> Result<(), io::Error> {
+    let dbname = &rec[idx];
+    if ctx.orig_dbname == *dbname {
+        rec[idx] = ctx.dest_dbname.clone()
     }
-    let owner = binopt_to_string(owner_opt);
-    let rewritten = if owner == format!("{}_dbo", &orig_dbname) {
-        format!("{}_dbo", &dbname)
-    } else if owner == format!("{}_guest", &orig_dbname) {
-        format!("{}_guest", &dbname)
-    } else if owner == format!("{}_db_owner", &orig_dbname) {
-        format!("{}_db_owner", &dbname)
-    } else {
-        owner
-    };
-    Some(rewritten.into_bytes())
+    Ok(())
 }
 
-fn replace_dbname_in_namespace(namespace_opt: &Option<Vec<u8>>, orig_dbname: &str, dbname: &str) -> Option<Vec<u8>> {
-    if namespace_opt.is_none() {
-        return None;
-    }
-    let namespace = binopt_to_string(namespace_opt);
-    let rewritten = if namespace == format!("{}_dbo", &orig_dbname) {
-        format!("{}_dbo", &dbname)
-    } else if namespace == format!("{}_guest", &orig_dbname) {
-        format!("{}_guest", &dbname)
-    } else if namespace == format!("{}_db_owner", &orig_dbname) {
-        format!("{}_db_owner", &dbname)
-    } else {
-        namespace
-    };
-    Some(rewritten.into_bytes())
+fn rewrite_bbf_authid_user_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
+    let filename = ctx.catalog_filename("babelfish_authid_user_ext")?;
+    rewrite_table(dir_path, &filename, ctx.header.compression, true, |mut rec| {
+        replace_record_rolname(ctx, &mut rec, 0)?;
+        Ok(rec)
+    })?;
+    Ok(())
 }
 
-// todo: +1 
+fn rewrite_bbf_extended_properties(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
+    let filename = ctx.catalog_filename("babelfish_extended_properties")?;
+    rewrite_table(dir_path, &filename, ctx.header.compression, false, |mut rec| {
+        let sql = &rec[0];
+        // todo
+        //println!("<{}>", &sql);
+        let replaced = replace_schema_in_sql(&ctx.schemas, sql, false)?;
+        Ok(vec!(replaced))
+    })?;
+    Ok(())
+}
+
+fn rewrite_bbf_function_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
+    let filename = ctx.catalog_filename("babelfish_function_ext")?;
+    rewrite_table(dir_path, &filename, ctx.header.compression, true, |mut rec| {
+        replace_record_schema(ctx, &mut rec, 0)?;
+        replace_record_schema_in_signature(ctx, &mut rec, 3)?;
+        Ok(rec)
+    })?;
+    Ok(())
+}
+
+fn rewrite_bbf_namespace_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
+    let filename = ctx.catalog_filename("babelfish_namespace_ext")?;
+    rewrite_table(dir_path, &filename, ctx.header.compression, true, |mut rec| {
+        replace_record_schema(ctx, &mut rec, 0)?;
+        Ok(rec)
+    })?;
+    Ok(())
+}
+
+fn rewrite_bbf_sysdatabases(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
+    let filename = ctx.catalog_filename("babelfish_sysdatabases")?;
+    rewrite_table(dir_path, &filename, ctx.header.compression, true, |mut rec| {
+        replace_record_dbname(ctx, &mut rec, 4)?;
+        Ok(rec)
+    })?;
+    Ok(())
+}
+
+fn rewrite_babelfish_catalogs(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
+    rewrite_bbf_authid_user_ext(ctx, dir_path)?;
+    rewrite_bbf_extended_properties(ctx, dir_path)?;
+    rewrite_bbf_function_ext(ctx, dir_path)?;
+    rewrite_bbf_namespace_ext(ctx, dir_path)?;
+    rewrite_bbf_sysdatabases(ctx, dir_path)?;
+    Ok(())
+}
+
 fn location_to_idx(lines: &Vec<&str>, line_no: u64, column_no: u64) -> usize {
     let mut res = 0usize;
     for i in 0..line_no - 1 {
         res += lines[i as usize].len();
-        if i > 0 {
-            res += 1;
-        }
     }
+    res += (line_no - 1) as usize; // EOLs
     res += (column_no - 1) as usize;
     res
 }
@@ -583,6 +597,7 @@ fn replace_schema_in_sql(schemas: &HashMap<String, String>, sql: &str, qualified
     use sqlparser::tokenizer::Token;
     use sqlparser::tokenizer::Tokenizer;
     use sqlparser::tokenizer::TokenWithLocation;
+    use sqlparser::tokenizer::Word;
 
     let dialect = GenericDialect {};
     let lines: Vec<&str> = sql.split('\n').collect();
@@ -591,13 +606,13 @@ fn replace_schema_in_sql(schemas: &HashMap<String, String>, sql: &str, qualified
         Err(e) => return Err(io::Error::new(io::ErrorKind::Other, format!(
             "Tokenizer error: {}, sql: {}", e, sql)))
     };
-    let mut to_replace: Vec<(&str, &str, &Location)> = Vec::new();
+    let mut to_replace: Vec<(&Word, &str, &Location)> = Vec::new();
     for i in 0..tokens.len() {
         if qualified_only {
             if i >= tokens.len() - 1 {
                 continue;
             }
-            let TokenWithLocation{ token, location } = &tokens[i + 1];
+            let TokenWithLocation{ token, .. } = &tokens[i + 1];
             if let Token::Period = token {
                 // success
             } else {
@@ -607,7 +622,7 @@ fn replace_schema_in_sql(schemas: &HashMap<String, String>, sql: &str, qualified
         let TokenWithLocation{ token, location } = &tokens[i];
         if let Token::Word(word) = token {
             if let Some(schema) = schemas.get(&word.value) {
-                to_replace.push((&word.value, schema, &location));
+                to_replace.push((word, schema, &location));
             }
         }
     }
@@ -615,14 +630,22 @@ fn replace_schema_in_sql(schemas: &HashMap<String, String>, sql: &str, qualified
     let orig: Vec<char> = sql.chars().collect();
     let mut rewritten: Vec<char> = Vec::new();
     let mut last_idx = 0;
-    for (schema_orig, schema_replaced, loc) in to_replace {
-        let start_idx = location_to_idx(&lines, loc.line, loc.column);
-        println!("{}", start_idx);
+    for (schema_orig_word, schema_replaced, loc) in to_replace {
+        let schema_orig = &schema_orig_word.value;
+        let mut start_idx = location_to_idx(&lines, loc.line, loc.column);
+        if schema_orig_word.quote_style.is_some() {
+            start_idx += 1;
+        }
         for i in last_idx..start_idx {
             rewritten.push(orig[i]);
         }
         for ch in schema_replaced.chars() {
             rewritten.push(ch);
+        }
+        let orig_check: String = orig.iter().skip(start_idx).take(schema_orig.len()).collect();
+        if orig_check != *schema_orig {
+            return Err(io::Error::new(io::ErrorKind::Other, format!(
+                "Replace error, sql: {}, location: {}", sql, loc)))
         }
         last_idx = start_idx + schema_orig.len();
     }
@@ -633,8 +656,6 @@ fn replace_schema_in_sql(schemas: &HashMap<String, String>, sql: &str, qualified
     }
 
     let res: String = rewritten.into_iter().collect();
-    println!("{}", sql);
-    println!("{}", res);
     Ok(res)
 }
 
@@ -667,6 +688,11 @@ fn replace_drop_stmt_unqualified(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), 
     Ok(())
 }
 
+fn replace_copy_stmt(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+    te.copy_stmt = replace_schema_opt(&ctx.schemas, &te.copy_stmt, true)?;
+    Ok(())
+}
+
 fn replace_tag(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
     te.tag = replace_schema_opt(&ctx.schemas, &te.tag, true)?;
     Ok(())
@@ -691,7 +717,7 @@ fn replace_namespace(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
     Ok(())
 }
 
-fn modify_schema_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
+fn collect_schema_and_owner(ctx: &mut TocCtx, te: &TocEntry) -> Result<(), io::Error> {
     let schema_orig = te.tag();
     let dbo_suffix = "_dbo";
     if ctx.orig_dbname.is_empty() {
@@ -708,68 +734,28 @@ fn modify_schema_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Er
     let schema_suffix = schema_orig.chars().skip(ctx.orig_dbname_with_underscore.len()).collect::<String>();
     let schema_dest = format!("{}_{}", ctx.dest_dbname, schema_suffix);
     ctx.schemas.insert(schema_orig.clone(), schema_dest.clone());
-    te.tag = Some(schema_dest.into_bytes());
 
     let owner_orig = te.owner();
     if owner_orig.starts_with(&ctx.orig_dbname_with_underscore) {
         let owner_suffix = owner_orig.chars().skip(ctx.orig_dbname_with_underscore.len()).collect::<String>();
         let owner_dest = format!("{}_{}", ctx.dest_dbname, owner_suffix);
         ctx.owners.insert(owner_orig.clone(), owner_dest.clone());
-        te.owner = Some(owner_dest.into_bytes());
     }
-
-    replace_create_stmt_unqualified(ctx, te)?;
-    replace_drop_stmt_unqualified(ctx, te)?;
-
     Ok(())
 }
 
-fn modify_schema_acl_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    replace_tag_unqualified(ctx, te)?;
-    replace_create_stmt_unqualified(ctx, te)?;
-    replace_owner(ctx, te);
-    Ok(())
-}
-
-fn modify_acl_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    replace_tag(ctx, te)?;
-    replace_create_stmt(ctx, te)?;
-    replace_namespace(ctx, te);
-    replace_owner(ctx, te);
-    Ok(())
-}
-
-fn modify_domain_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    replace_create_stmt(ctx, te)?;
-    replace_drop_stmt(ctx, te)?;
-    replace_namespace(ctx, te);
-    replace_owner(ctx, te);
-    Ok(())
-}
-
-fn modify_function_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    replace_tag(ctx, te)?;
-    replace_create_stmt(ctx, te)?;
-    replace_drop_stmt(ctx, te)?;
-    replace_namespace(ctx, te);
-    replace_owner(ctx, te);
-    Ok(())
-}
-
-fn modify_table_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    replace_create_stmt(ctx, te)?;
-    replace_drop_stmt(ctx, te)?;
-    replace_namespace(ctx, te);
-    replace_owner(ctx, te);
-    Ok(())
-}
-
-fn modify_procedure_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    replace_tag(ctx, te)?;
-    replace_create_stmt(ctx, te)?;
-    replace_drop_stmt(ctx, te)?;
-    replace_namespace(ctx, te);
-    replace_owner(ctx, te);
+fn collect_babelfish_catalog_filename(ctx: &mut TocCtx, te: &TocEntry) -> Result<(), io::Error> {
+    let catalogs = vec!(
+        "babelfish_authid_user_ext",
+        "babelfish_extended_properties",
+        "babelfish_function_ext",
+        "babelfish_namespace_ext",
+        "babelfish_sysdatabases",
+    );
+    let tag = te.tag();
+    if catalogs.contains(&tag.as_str()) {
+        ctx.catalog_files.insert(tag, te.filename());
+    }
     Ok(())
 }
 
@@ -777,44 +763,28 @@ fn modify_toc_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), io::Error
     let tag = te.tag();
     let description = te.description();
     if "SCHEMA" == description {
-        modify_schema_entry(ctx, te)?;
-    } else if "ACL" == description {
-        if tag.starts_with("SCHEMA ") {
-            modify_schema_acl_entry(ctx, te)?;
-        } else {
-            modify_acl_entry(ctx, te)?;
+        collect_schema_and_owner(ctx, te)?;
+        replace_tag_unqualified(ctx, te)?;
+        replace_create_stmt_unqualified(ctx, te)?;
+        replace_drop_stmt_unqualified(ctx, te)?;
+        replace_owner(ctx, te)?;
+    } else if "ACL" == description && tag.starts_with("SCHEMA ") {
+        replace_tag_unqualified(ctx, te)?;
+        replace_create_stmt_unqualified(ctx, te)?;
+        replace_owner(ctx, te)?;
+    } else {
+        if "TABLE DATA" == description {
+            collect_babelfish_catalog_filename(ctx, te)?;
         }
-    } else if "DOMAIN" == description {
-        modify_domain_entry(ctx, te)?;
-    } else if "FUNCTION" == description {
-        modify_function_entry(ctx, te)?;
-    } else if "TABLE" == description {
-        modify_table_entry(ctx, te)?;
-    } else if "PROCEDURE" == description {
-        modify_procedure_entry(ctx, te)?;
+        replace_tag(ctx, te)?;
+        replace_create_stmt(ctx, te)?;
+        replace_drop_stmt(ctx, te)?;
+        replace_copy_stmt(ctx, te)?;
+        replace_namespace(ctx, te)?;
+        replace_owner(ctx, te)?;
     }
 
     Ok(())
-    /*
-    if te_tag.ends_with("_dbo") && te_description == "SCHEMA" {
-        orig_dbname = te_tag.chars().take(te_tag.len() - "_dbo".len()).collect();
-    }
-    if !te_filename.is_empty() {
-        filenames.insert(te_tag, te_filename);
-    }
-    // todo: removeme
-    //println!("=========================================");
-    te.defn = replace_dbname(&te, &te.defn, orig_dbname, dbname, true);
-    te.copy_stmt = replace_dbname(&te, &te.copy_stmt, orig_dbname, dbname, true);
-    te.drop_stmt = replace_dbname(&te, &te.drop_stmt, orig_dbname, dbname, true);
-    println!("{}", binopt_to_string(&te.description));
-    te.namespace = replace_dbname_in_namespace(&te.namespace, orig_dbname, dbname);
-    te.owner = replace_dbname_in_owner(&te.owner, orig_dbname, dbname);
-    // last
-    te.tag = replace_dbname_in_tag(&te.tag, orig_dbname, dbname);
-    //println!("=========================================");
-    // end: removeme
-     */
 }
 
 pub fn print_toc<W: Write>(toc_path: &str, writer: &mut W) -> Result<(), io::Error> {
@@ -853,26 +823,26 @@ pub fn rewrite_toc(toc_path: &str, dbname: &str) -> Result<(), io::Error> {
         Some(parent) => parent.to_path_buf(),
         None => return Err(io::Error::new(io::ErrorKind::Other, "Error accessing dump directory"))
     };
-    let toc_dest_path = dir_path.join(Path::new("toc_rewritten.dat"));
+    let toc_dest_path = dir_path.join("toc_rewritten.dat");
     let toc_src = File::open(&toc_src_path)?;
     let mut reader = BufReader::new(toc_src);
     let dest_file = File::create(&toc_dest_path)?;
     let mut writer = BufWriter::new(dest_file);
 
-    copy_header(&mut reader, &mut writer)?;
+    let header = copy_header(&mut reader, &mut writer)?;
     let toc_count = copy_int(&mut reader, &mut writer)?;
-    let mut ctx = TocCtx::new(&dbname);
+    let mut ctx = TocCtx::new(header, &dbname);
     for _ in 0..toc_count {
         let mut te  = read_toc_entry(&mut reader)?;
         modify_toc_entry(&mut ctx, &mut te)?;
         write_toc_entry(&mut writer, &te)?;
     }
-    // todo
-    //rewrite_dbname_in_tables(&ctx.filenames, dir_path.as_path(), &ctx.orig_dbname, dbname)?;
 
-    //let toc_orig_path = dir_path.join("toc.dat.orig");
-    //fs::rename(&toc_src_path, &toc_orig_path)?;
-    //fs::rename(&toc_dest_path, &toc_src_path)?;
+    rewrite_babelfish_catalogs(&ctx, dir_path.as_path())?;
+
+    let toc_orig_path = dir_path.join("toc.dat.orig");
+    fs::rename(&toc_src_path, &toc_orig_path)?;
+    fs::rename(&toc_dest_path, &toc_src_path)?;
 
     Ok(())
 }

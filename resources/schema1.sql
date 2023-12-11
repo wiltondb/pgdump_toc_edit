@@ -179,6 +179,15 @@ go
 
 alter table tab1
 add constraint constr1 check (id >= 42);
+go
 
 alter table schema1.tab2
 add constraint constr2 check (id >= 42); 
+go
+
+-- extended properties
+
+exec sys.sp_addextendedproperty 'foo1', 'bar1'
+exec sys.sp_addextendedproperty 'foo2', 'bar2', 'SCHEMA', 'schema1'
+exec sys.sp_addextendedproperty 'foo3', 'bar3', 'SCHEMA', 'schema1', 'TABLE', 'tab2'
+go
