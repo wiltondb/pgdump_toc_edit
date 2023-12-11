@@ -19,9 +19,6 @@ use std::io;
 use clap::Arg;
 use clap::ArgAction;
 use clap::Command;
-use sqlparser::dialect::GenericDialect;
-use sqlparser::parser::Parser;
-use sqlparser::tokenizer::Tokenizer;
 
 fn main() {
     let args = Command::new("pg_dump TOC rewriter")
@@ -40,12 +37,6 @@ fn main() {
             .conflicts_with("dbname")
             .help("Only print TOC details without rewriting")
         )
-        .arg(Arg::new("dev")
-            .long("dev")
-            .action(ArgAction::SetTrue)
-            .conflicts_with("dbname")
-            .help("Dev-time option")
-        )
         .arg(Arg::new("toc.dat")
             .required(true)
             .help("TOC file")
@@ -55,36 +46,6 @@ fn main() {
     let toc_file = args.get_one::<String>("toc.dat").map(|s| s.to_string()).expect("toc.dat not specified");
     let dbname = args.get_one::<String>("dbname").map(|s| s.to_string());
     let print = args.get_one::<bool>("print").map_or(false, |b| *b);
-    let dev = args.get_one::<bool>("dev").map_or(false, |b| *b);
-
-    if dev {
-
-        let sql = "
-SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;
-CREATE FUNCTION test3_schema1.func8(\"@param1\" test3_dbo.domain1) RETURNS TABLE(\"@ret1\" test3_schema1.\"@ret1_func8\")
-    LANGUAGE pltsql
-    AS '{\"version_num\": \"1\", \"typmod_array\": [\"-1\", \"-1\", \"-1\"], \"original_probin\": \"\"}', 'begin
-	insert @ret1
-	select 42, @param1
-	return;
-end';
-RESET babelfishpg_tsql.restore_tsql_tabletype;
-";
-
-        let dialect = GenericDialect {};
-        match Tokenizer::new(&dialect, &sql).tokenize_with_location() {
-            Ok(tokens) => {
-                println!("Count: {}", tokens.len());
-                for tl in tokens {
-                    //println!("{}", tl.location);
-                    println!("====");
-                    println!("{}", tl.token);
-                }
-            },
-            Err(e) => println!("ERROR: {}", e)
-        }
-        return;
-    }
 
     if print {
         let _ = pgdump_toc_edit::print_toc(&toc_file, &mut io::stdout());

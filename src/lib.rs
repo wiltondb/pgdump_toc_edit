@@ -26,11 +26,19 @@ use std::io::Read;
 use std::io::Write;
 use std::path::Path;
 
+use chrono::Datelike;
+use chrono::Timelike;
+use chrono::naive::NaiveDate;
 use chrono::naive::NaiveDateTime;
-use chrono::{Timelike, Datelike};
+use chrono::naive::NaiveTime;
 use flate2::write::GzEncoder;
 use flate2::bufread::GzDecoder;
 use flate2::Compression;
+use sqlparser::dialect::GenericDialect;
+use sqlparser::tokenizer::Token;
+use sqlparser::tokenizer::Tokenizer;
+use sqlparser::tokenizer::TokenWithLocation;
+
 
 #[cfg(windows)]
 const LINE_ENDING: &'static str = "\r\n";
@@ -38,6 +46,7 @@ const LINE_ENDING: &'static str = "\r\n";
 const LINE_ENDING: &'static str = "\n";
 
 
+#[allow(dead_code)]
 #[derive(Default, Debug, Clone)]
 struct TocHeader {
     compression: i32,
@@ -252,8 +261,6 @@ fn copy_int<R: Read, W: Write>(reader: &mut R, writer: &mut W) -> Result<i32, io
 }
 
 fn read_timestamp<R: Read>(reader: &mut R) -> Result<NaiveDateTime, io::Error> {
-    use chrono::naive::NaiveDate;
-    use chrono::naive::NaiveTime;
     let sec = read_int(reader)?;
     let min = read_int(reader)?;
     let hour = read_int(reader)?;
@@ -335,17 +342,6 @@ fn binopt_to_string(bin_opt: &Option<Vec<u8>>) -> String {
             String::from_utf8_lossy(bin.as_slice()).to_string()
         },
         None => "".to_string()
-    }
-}
-
-#[allow(dead_code)]
-fn print_bin_str(label: &str, bin_opt: &Option<Vec<u8>>) {
-    match bin_opt {
-        Some(bin) => {
-            let st = String::from_utf8_lossy(bin.as_slice()).to_string();
-            println!("{}: {}", label, st);
-        },
-        None => {}
     }
 }
 
@@ -435,7 +431,107 @@ fn copy_header<R: Read, W: Write>(reader: &mut R, writer: &mut W) -> Result<TocH
     })
 }
 
-fn rewrite_table<F: Fn(Vec<String>) -> Result<Vec<String>, io::Error>>(dir_path: &Path, filename: &str, compression: i32, line_by_line: bool, fun: F) -> Result<(), io::Error> {
+fn location_to_idx(lines: &Vec<&str>, twl: &TokenWithLocation) -> usize {
+    let TokenWithLocation{ token, location } = twl;
+    let mut res = 0usize;
+    for i in 0..location.line - 1 {
+        res += lines[i as usize].len();
+    }
+    res += (location.line - 1) as usize; // EOLs
+    res += (location.column - 1) as usize;
+    if let Token::Word(word) = token {
+        if word.quote_style.is_some() {
+            res += 1;
+        }
+    } else if let Token::SingleQuotedString(_) = token {
+        res += 1;
+    }
+    res
+}
+
+fn replace_schema_in_sql_internal(schemas: &HashMap<String, String>,
+                                  sql: &str,
+                                  qualified_only: bool,
+                                  single_quoted_only: bool
+) -> Result<String, io::Error> {
+    let dialect = GenericDialect {};
+    let lines: Vec<&str> = sql.split('\n').collect();
+    let tokens = match Tokenizer::new(&dialect, sql).tokenize_with_location() {
+        Ok(tokens) => tokens,
+        Err(e) => return Err(io::Error::new(io::ErrorKind::Other, format!(
+            "Tokenizer error: {}, sql: {}", e, sql)))
+    };
+    let mut to_replace: Vec<(&str, &str, usize)> = Vec::new();
+    for i in 0..tokens.len() {
+        if qualified_only {
+            if i >= tokens.len() - 1 {
+                continue;
+            }
+            let TokenWithLocation{ token, .. } = &tokens[i + 1];
+            if let Token::Period = token {
+                // success
+            } else {
+                continue;
+            }
+        }
+        let twl = &tokens[i];
+        let loc_idx = location_to_idx(&lines, twl);
+        let TokenWithLocation{ token, .. } = twl;
+        if single_quoted_only {
+            if let Token::SingleQuotedString(st) = token {
+                if let Some(schema) = schemas.get(st.as_str()) {
+                    to_replace.push((st, schema, loc_idx));
+                }
+            }
+        } else {
+            if let Token::Word(word) = token {
+                if let Some(schema) = schemas.get(&word.value) {
+                    to_replace.push((&word.value, schema, loc_idx));
+                }
+            }
+        }
+    }
+
+    let orig: Vec<char> = sql.chars().collect();
+    let mut rewritten: Vec<char> = Vec::new();
+    let mut last_idx = 0;
+    for (schema_orig, schema_replaced, start_idx) in to_replace {
+        for i in last_idx..start_idx {
+            rewritten.push(orig[i]);
+        }
+        for ch in schema_replaced.chars() {
+            rewritten.push(ch);
+        }
+        let orig_check: String = orig.iter().skip(start_idx).take(schema_orig.len()).collect();
+        if orig_check != *schema_orig {
+            return Err(io::Error::new(io::ErrorKind::Other, format!(
+                "Replace error, sql: {}, location: {}", sql, start_idx)))
+        }
+        last_idx = start_idx + schema_orig.len();
+    }
+
+    // tail
+    for i in last_idx..orig.len() {
+        rewritten.push(orig[i]);
+    }
+
+    let res: String = rewritten.into_iter().collect();
+    Ok(res)
+}
+
+fn replace_schema_in_sql(schemas: &HashMap<String, String>, sql: &str) -> Result<String, io::Error> {
+    replace_schema_in_sql_internal(schemas, sql, true, false)
+}
+
+fn replace_schema_in_sql_unqualified(schemas: &HashMap<String, String>, sql: &str) -> Result<String, io::Error> {
+    replace_schema_in_sql_internal(schemas, sql, false, false)
+}
+
+fn replace_schema_in_sql_single_quoted(schemas: &HashMap<String, String>, sql: &str) -> Result<String, io::Error> {
+    replace_schema_in_sql_internal(schemas, sql, false, true)
+}
+
+fn rewrite_table_internal<F: Fn(Vec<String>) -> Result<Vec<String>, io::Error>>(dir_path: &Path, filename: &str, compression: i32, line_by_line: bool, fun: F) -> Result<(), io::Error> {
     let rewrite_line = |line: String| -> Result<String, io::Error> {
         let res = if "\\." == line || line.is_empty() {
             line
@@ -492,6 +588,14 @@ fn rewrite_table<F: Fn(Vec<String>) -> Result<Vec<String>, io::Error>>(dir_path:
     Ok(())
 }
 
+fn rewrite_table<F: Fn(Vec<String>) -> Result<Vec<String>, io::Error>>(dir_path: &Path, filename: &str, compression: i32, fun: F) -> Result<(), io::Error> {
+    rewrite_table_internal(dir_path, filename, compression, true, fun)
+}
+
+fn rewrite_table_all_at_once<F: Fn(Vec<String>) -> Result<Vec<String>, io::Error>>(dir_path: &Path, filename: &str, compression: i32, fun: F) -> Result<(), io::Error> {
+    rewrite_table_internal(dir_path, filename, compression, false, fun)
+}
+
 fn replace_record_rolname(ctx: &TocCtx, rec: &mut Vec<String>, idx: usize) -> Result<(), io::Error> {
     let rolname = &rec[idx];
     if let Some(replaced) = ctx.owners.get(rolname) {
@@ -510,7 +614,7 @@ fn replace_record_schema(ctx: &TocCtx, rec: &mut Vec<String>, idx: usize) -> Res
 
 fn replace_record_schema_in_signature(ctx: &TocCtx, rec: &mut Vec<String>, idx: usize) -> Result<(), io::Error> {
     let sig = &rec[idx];
-    let replaced = replace_schema_in_sql(&ctx.schemas, sig, true)?;
+    let replaced = replace_schema_in_sql(&ctx.schemas, sig)?;
     rec[idx] = replaced;
     Ok(())
 }
@@ -525,7 +629,7 @@ fn replace_record_dbname(ctx: &TocCtx, rec: &mut Vec<String>, idx: usize) -> Res
 
 fn rewrite_bbf_authid_user_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
     let filename = ctx.catalog_filename("babelfish_authid_user_ext")?;
-    rewrite_table(dir_path, &filename, ctx.header.compression, true, |mut rec| {
+    rewrite_table(dir_path, &filename, ctx.header.compression, |mut rec| {
         replace_record_rolname(ctx, &mut rec, 0)?;
         Ok(rec)
     })?;
@@ -534,11 +638,9 @@ fn rewrite_bbf_authid_user_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::
 
 fn rewrite_bbf_extended_properties(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
     let filename = ctx.catalog_filename("babelfish_extended_properties")?;
-    rewrite_table(dir_path, &filename, ctx.header.compression, false, |mut rec| {
+    rewrite_table_all_at_once(dir_path, &filename, ctx.header.compression, |rec| {
         let sql = &rec[0];
-        // todo
-        //println!("<{}>", &sql);
-        let replaced = replace_schema_in_sql(&ctx.schemas, sql, false)?;
+        let replaced = replace_schema_in_sql_single_quoted(&ctx.schemas, sql)?;
         Ok(vec!(replaced))
     })?;
     Ok(())
@@ -546,7 +648,7 @@ fn rewrite_bbf_extended_properties(ctx: &TocCtx, dir_path: &Path) -> Result<(), 
 
 fn rewrite_bbf_function_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
     let filename = ctx.catalog_filename("babelfish_function_ext")?;
-    rewrite_table(dir_path, &filename, ctx.header.compression, true, |mut rec| {
+    rewrite_table(dir_path, &filename, ctx.header.compression, |mut rec| {
         replace_record_schema(ctx, &mut rec, 0)?;
         replace_record_schema_in_signature(ctx, &mut rec, 3)?;
         Ok(rec)
@@ -556,7 +658,7 @@ fn rewrite_bbf_function_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Err
 
 fn rewrite_bbf_namespace_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
     let filename = ctx.catalog_filename("babelfish_namespace_ext")?;
-    rewrite_table(dir_path, &filename, ctx.header.compression, true, |mut rec| {
+    rewrite_table(dir_path, &filename, ctx.header.compression, |mut rec| {
         replace_record_schema(ctx, &mut rec, 0)?;
         Ok(rec)
     })?;
@@ -565,7 +667,7 @@ fn rewrite_bbf_namespace_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Er
 
 fn rewrite_bbf_sysdatabases(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::Error> {
     let filename = ctx.catalog_filename("babelfish_sysdatabases")?;
-    rewrite_table(dir_path, &filename, ctx.header.compression, true, |mut rec| {
+    rewrite_table(dir_path, &filename, ctx.header.compression, |mut rec| {
         replace_record_dbname(ctx, &mut rec, 4)?;
         Ok(rec)
     })?;
@@ -581,125 +683,56 @@ fn rewrite_babelfish_catalogs(ctx: &TocCtx, dir_path: &Path) -> Result<(), io::E
     Ok(())
 }
 
-fn location_to_idx(lines: &Vec<&str>, line_no: u64, column_no: u64) -> usize {
-    let mut res = 0usize;
-    for i in 0..line_no - 1 {
-        res += lines[i as usize].len();
-    }
-    res += (line_no - 1) as usize; // EOLs
-    res += (column_no - 1) as usize;
-    res
-}
-
-fn replace_schema_in_sql(schemas: &HashMap<String, String>, sql: &str, qualified_only: bool) -> Result<String, io::Error> {
-    use sqlparser::dialect::GenericDialect;
-    use sqlparser::tokenizer::Location;
-    use sqlparser::tokenizer::Token;
-    use sqlparser::tokenizer::Tokenizer;
-    use sqlparser::tokenizer::TokenWithLocation;
-    use sqlparser::tokenizer::Word;
-
-    let dialect = GenericDialect {};
-    let lines: Vec<&str> = sql.split('\n').collect();
-    let tokens = match Tokenizer::new(&dialect, sql).tokenize_with_location() {
-        Ok(tokens) => tokens,
-        Err(e) => return Err(io::Error::new(io::ErrorKind::Other, format!(
-            "Tokenizer error: {}, sql: {}", e, sql)))
-    };
-    let mut to_replace: Vec<(&Word, &str, &Location)> = Vec::new();
-    for i in 0..tokens.len() {
-        if qualified_only {
-            if i >= tokens.len() - 1 {
-                continue;
-            }
-            let TokenWithLocation{ token, .. } = &tokens[i + 1];
-            if let Token::Period = token {
-                // success
-            } else {
-                continue;
-            }
-        }
-        let TokenWithLocation{ token, location } = &tokens[i];
-        if let Token::Word(word) = token {
-            if let Some(schema) = schemas.get(&word.value) {
-                to_replace.push((word, schema, &location));
-            }
-        }
-    }
-
-    let orig: Vec<char> = sql.chars().collect();
-    let mut rewritten: Vec<char> = Vec::new();
-    let mut last_idx = 0;
-    for (schema_orig_word, schema_replaced, loc) in to_replace {
-        let schema_orig = &schema_orig_word.value;
-        let mut start_idx = location_to_idx(&lines, loc.line, loc.column);
-        if schema_orig_word.quote_style.is_some() {
-            start_idx += 1;
-        }
-        for i in last_idx..start_idx {
-            rewritten.push(orig[i]);
-        }
-        for ch in schema_replaced.chars() {
-            rewritten.push(ch);
-        }
-        let orig_check: String = orig.iter().skip(start_idx).take(schema_orig.len()).collect();
-        if orig_check != *schema_orig {
-            return Err(io::Error::new(io::ErrorKind::Other, format!(
-                "Replace error, sql: {}, location: {}", sql, loc)))
-        }
-        last_idx = start_idx + schema_orig.len();
-    }
-
-    // tail
-    for i in last_idx..orig.len() {
-        rewritten.push(orig[i]);
-    }
-
-    let res: String = rewritten.into_iter().collect();
-    Ok(res)
-}
-
-fn replace_schema_opt(schemas: &HashMap<String, String>, sql: &Option<Vec<u8>>, qualified_only: bool) -> Result<Option<Vec<u8>>, io::Error> {
+fn replace_schema_opt(schemas: &HashMap<String, String>, sql: &Option<Vec<u8>>) -> Result<Option<Vec<u8>>, io::Error> {
     if sql.is_none() {
         return Ok(None)
     };
     let sql_st = binopt_to_string(sql);
-    let sql_rewritten = replace_schema_in_sql(schemas, &sql_st, qualified_only)?;
+    let sql_rewritten = replace_schema_in_sql(schemas, &sql_st)?;
+    Ok(Some(sql_rewritten.into_bytes()))
+}
+
+fn replace_schema_opt_unqualified(schemas: &HashMap<String, String>, sql: &Option<Vec<u8>>) -> Result<Option<Vec<u8>>, io::Error> {
+    if sql.is_none() {
+        return Ok(None)
+    };
+    let sql_st = binopt_to_string(sql);
+    let sql_rewritten = replace_schema_in_sql_unqualified(schemas, &sql_st)?;
     Ok(Some(sql_rewritten.into_bytes()))
 }
 
 fn replace_create_stmt(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    te.create_stmt = replace_schema_opt(&ctx.schemas, &te.create_stmt, true)?;
+    te.create_stmt = replace_schema_opt(&ctx.schemas, &te.create_stmt)?;
     Ok(())
 }
 
 fn replace_create_stmt_unqualified(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    te.create_stmt = replace_schema_opt(&ctx.schemas, &te.create_stmt, false)?;
+    te.create_stmt = replace_schema_opt_unqualified(&ctx.schemas, &te.create_stmt)?;
     Ok(())
 }
 
 fn replace_drop_stmt(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    te.drop_stmt = replace_schema_opt(&ctx.schemas, &te.drop_stmt, true)?;
+    te.drop_stmt = replace_schema_opt(&ctx.schemas, &te.drop_stmt)?;
     Ok(())
 }
 
 fn replace_drop_stmt_unqualified(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    te.drop_stmt = replace_schema_opt(&ctx.schemas, &te.drop_stmt, false)?;
+    te.drop_stmt = replace_schema_opt_unqualified(&ctx.schemas, &te.drop_stmt)?;
     Ok(())
 }
 
 fn replace_copy_stmt(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    te.copy_stmt = replace_schema_opt(&ctx.schemas, &te.copy_stmt, true)?;
+    te.copy_stmt = replace_schema_opt(&ctx.schemas, &te.copy_stmt)?;
     Ok(())
 }
 
 fn replace_tag(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    te.tag = replace_schema_opt(&ctx.schemas, &te.tag, true)?;
+    te.tag = replace_schema_opt(&ctx.schemas, &te.tag)?;
     Ok(())
 }
 
 fn replace_tag_unqualified(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), io::Error> {
-    te.tag = replace_schema_opt(&ctx.schemas, &te.tag, false)?;
+    te.tag = replace_schema_opt_unqualified(&ctx.schemas, &te.tag)?;
     Ok(())
 }
 
