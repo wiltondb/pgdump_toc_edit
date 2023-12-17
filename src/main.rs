@@ -48,12 +48,12 @@ fn main() {
     let print = args.get_one::<bool>("print").map_or(false, |b| *b);
 
     if print {
-        let _ = pgdump_toc_edit::print_toc(&toc_file, &mut io::stdout());
+        let _ = pgdump_toc_rewrite::print_toc(&toc_file, &mut io::stdout());
         return;
     }
 
     if let Some(name) = dbname {
-        match pgdump_toc_edit::rewrite_toc(&toc_file, &name) {
+        match pgdump_toc_rewrite::rewrite_toc(&toc_file, &name) {
             Ok(_) => {},
             Err(e) => panic!("{}", e)
         }

@@ -1,5 +1,5 @@
 [package]
-name = "pgdump_toc_edit"
+name = "pgdump_toc_rewrite"
 version = "1.0.0"
 authors = ["alex@staticlibs.net"]
 edition = "2018"
@@ -8,7 +8,12 @@ edition = "2018"
 chrono = "0.4.30"
 clap = "4.4.10"
 flate2 = "1.0.28"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 sqlparser = "0.40.0"
+
+[dev-dependencies]
+copy_dir = "0.1.3"
 
 
 

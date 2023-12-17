@@ -1,5 +1,5 @@
-create database test3
-use test3
+create database test1
+use test1
 go
 
 -- namespace
@@ -140,7 +140,6 @@ create table schema1.tab2 (
 );
 go
 
-drop table schema1.tab3
 
 create table schema1.tab3 (
 	id int primary key,

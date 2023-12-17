@@ -1,0 +1,1875 @@
+Magic: PGDMP
+Dump format version: 1.14.0
+Size of int: 4
+Compression level: 6
+Timestamp: 2023-11-14 12:24:34
+DST: false
+Postgres DB: wilton
+Server version: 15.4
+pg_dump version: 15.4
+TOC entries: 79
+Entry: 1
+dump_id: 5986
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: ENCODING
+description: ENCODING
+section: 2
+create_stmt: SET client_encoding = 'UTF8';
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: 
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 2
+dump_id: 5987
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: STDSTRINGS
+description: STDSTRINGS
+section: 2
+create_stmt: SET standard_conforming_strings = 'on';
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: 
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 3
+dump_id: 5988
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: SEARCHPATH
+description: SEARCHPATH
+section: 2
+create_stmt: SELECT pg_catalog.set_config('search_path', '', false);
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: 
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 4
+dump_id: 5989
+had_dumper: 0
+table_oid: 1262
+catalog_oid: 16385
+tag: wilton
+description: DATABASE
+section: 2
+create_stmt: CREATE DATABASE wilton WITH TEMPLATE = template0 ENCODING = 'UTF8' LOCALE_PROVIDER = libc LOCALE = 'C';
+
+drop_stmt: DROP DATABASE wilton;
+
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: wilton
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 5
+dump_id: 5990
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: DATABASE wilton
+description: ACL
+section: 1
+create_stmt: GRANT ALL ON DATABASE wilton TO sysadmin WITH GRANT OPTION;
+SET SESSION AUTHORIZATION sysadmin;
+GRANT ALL ON DATABASE wilton TO master_dbo;
+RESET SESSION AUTHORIZATION;
+SET SESSION AUTHORIZATION sysadmin;
+GRANT ALL ON DATABASE wilton TO tempdb_dbo;
+RESET SESSION AUTHORIZATION;
+SET SESSION AUTHORIZATION sysadmin;
+GRANT ALL ON DATABASE wilton TO msdb_dbo;
+RESET SESSION AUTHORIZATION;
+SET SESSION AUTHORIZATION sysadmin;
+GRANT ALL ON DATABASE wilton TO test1_dbo;
+RESET SESSION AUTHORIZATION;
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: wilton
+table_with_oids: false
+dep 1: 5989
+dep 2: 
+filename: 
+
+Entry: 6
+dump_id: 5991
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: wilton
+description: DATABASE PROPERTIES
+section: 2
+create_stmt: ALTER DATABASE wilton SET "babelfishpg_tsql.migration_mode" TO 'multi-db';
+ALTER DATABASE wilton SET "babelfishpg_tsql.enable_ownership_structure" TO 'true';
+alter database wilton set babelfishpg_tsql.restored_server_collation_name = 'bbf_unicode_cp1_ci_as';
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: wilton
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 7
+dump_id: 5992
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: BABELFISHGUCS
+description: BABELFISHGUCS
+section: 2
+create_stmt: SET babelfishpg_tsql.dump_restore = TRUE;
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: 
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 8
+dump_id: 18
+had_dumper: 0
+table_oid: 2615
+catalog_oid: 19449
+tag: test1_dbo
+description: SCHEMA
+section: 2
+create_stmt: CREATE SCHEMA test1_dbo;
+
+drop_stmt: DROP SCHEMA test1_dbo;
+
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: test1_db_owner
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 9
+dump_id: 5993
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: SCHEMA test1_dbo
+description: ACL
+section: 1
+create_stmt: GRANT USAGE ON SCHEMA test1_dbo TO PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: test1_db_owner
+table_with_oids: false
+dep 1: 18
+dep 2: 
+filename: 
+
+Entry: 10
+dump_id: 19
+had_dumper: 0
+table_oid: 2615
+catalog_oid: 19454
+tag: test1_guest
+description: SCHEMA
+section: 2
+create_stmt: CREATE SCHEMA test1_guest;
+
+drop_stmt: DROP SCHEMA test1_guest;
+
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: test1_guest
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 11
+dump_id: 5994
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: SCHEMA test1_guest
+description: ACL
+section: 1
+create_stmt: GRANT USAGE ON SCHEMA test1_guest TO PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: test1_guest
+table_with_oids: false
+dep 1: 19
+dep 2: 
+filename: 
+
+Entry: 12
+dump_id: 20
+had_dumper: 0
+table_oid: 2615
+catalog_oid: 19455
+tag: test1_schema1
+description: SCHEMA
+section: 2
+create_stmt: CREATE SCHEMA test1_schema1;
+
+drop_stmt: DROP SCHEMA test1_schema1;
+
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 
+filename: 
+
+Entry: 13
+dump_id: 5995
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: SCHEMA test1_schema1
+description: ACL
+section: 1
+create_stmt: GRANT USAGE ON SCHEMA test1_schema1 TO PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: 
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 20
+dep 2: 
+filename: 
+
+Entry: 14
+dump_id: 2581
+had_dumper: 0
+table_oid: 1247
+catalog_oid: 19457
+tag: domain1
+description: DOMAIN
+section: 2
+create_stmt: CREATE DOMAIN test1_dbo.domain1 AS sys.nvarchar NOT NULL;
+
+drop_stmt: DROP DOMAIN test1_dbo.domain1;
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 18
+dep 2: 
+filename: 
+
+Entry: 15
+dump_id: 5996
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: TYPE domain1
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON TYPE test1_dbo.domain1 FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 
+filename: 
+
+Entry: 16
+dump_id: 2584
+had_dumper: 0
+table_oid: 1247
+catalog_oid: 19459
+tag: domain2
+description: DOMAIN
+section: 2
+create_stmt: CREATE DOMAIN test1_schema1.domain2 AS sys.nvarchar NOT NULL;
+
+drop_stmt: DROP DOMAIN test1_schema1.domain2;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 20
+dep 2: 
+filename: 
+
+Entry: 17
+dump_id: 5997
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: TYPE domain2
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON TYPE test1_schema1.domain2 FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2584
+dep 2: 
+filename: 
+
+Entry: 18
+dump_id: 1624
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19470
+tag: func1(integer)
+description: FUNCTION
+section: 2
+create_stmt: CREATE FUNCTION test1_dbo.func1("@param1" integer) RETURNS integer
+    LANGUAGE pltsql STABLE
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', 'begin
+	return @param1 + 1
+end';
+
+drop_stmt: DROP FUNCTION test1_dbo.func1("@param1" integer);
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 18
+dep 2: 
+filename: 
+
+Entry: 19
+dump_id: 5998
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION func1("@param1" integer)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_dbo.func1("@param1" integer) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1624
+dep 2: 
+filename: 
+
+Entry: 20
+dump_id: 1626
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19472
+tag: func3(test1_dbo.domain1)
+description: FUNCTION
+section: 2
+create_stmt: CREATE FUNCTION test1_dbo.func3("@param1" test1_dbo.domain1) RETURNS test1_dbo.domain1
+    LANGUAGE pltsql STABLE
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', $$begin
+	return concat('Hello ', @param1);
+end$$;
+
+drop_stmt: DROP FUNCTION test1_dbo.func3("@param1" test1_dbo.domain1);
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 18
+dep 3: 
+filename: 
+
+Entry: 21
+dump_id: 5999
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION func3("@param1" test1_dbo.domain1)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_dbo.func3("@param1" test1_dbo.domain1) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1626
+dep 2: 
+filename: 
+
+Entry: 22
+dump_id: 1628
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19474
+tag: func5(test1_dbo.domain1)
+description: FUNCTION
+section: 2
+create_stmt: CREATE FUNCTION test1_dbo.func5("@param1" test1_dbo.domain1) RETURNS TABLE(concat test1_dbo.domain1)
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', $$return (
+	select cast(concat('Hello ', @param1) as domain1)
+)$$;
+
+drop_stmt: DROP FUNCTION test1_dbo.func5("@param1" test1_dbo.domain1);
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 18
+dep 3: 
+filename: 
+
+Entry: 23
+dump_id: 6000
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION func5("@param1" test1_dbo.domain1)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_dbo.func5("@param1" test1_dbo.domain1) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1628
+dep 2: 
+filename: 
+
+Entry: 24
+dump_id: 370
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19476
+tag: @ret1_func7
+description: TABLE
+section: 2
+create_stmt: SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;
+CREATE TABLE test1_dbo."@ret1_func7" (
+    id1 integer,
+    val1 test1_dbo.domain1
+)
+WITH (bbf_rel_create_date='2023-12-14 12:24:29.848');
+RESET babelfishpg_tsql.restore_tsql_tabletype;
+ALTER TABLE ONLY test1_dbo."@ret1_func7" ALTER COLUMN id1 SET (bbf_original_name='id1');
+ALTER TABLE ONLY test1_dbo."@ret1_func7" ALTER COLUMN val1 SET (bbf_original_name='val1');
+
+drop_stmt: DROP TABLE test1_dbo."@ret1_func7";
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: heap
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 18
+dep 3: 
+filename: 
+
+Entry: 25
+dump_id: 1584
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19481
+tag: func7(test1_dbo.domain1)
+description: FUNCTION
+section: 2
+create_stmt: SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;
+CREATE FUNCTION test1_dbo.func7("@param1" test1_dbo.domain1) RETURNS TABLE("@ret1" test1_dbo."@ret1_func7")
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1", "-1"], "original_probin": ""}', 'begin
+	insert @ret1
+	select 42, @param1
+	return;
+end';
+RESET babelfishpg_tsql.restore_tsql_tabletype;
+
+drop_stmt: DROP FUNCTION test1_dbo.func7("@param1" test1_dbo.domain1);
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 370
+dep 2: 2581
+dep 3: 18
+dep 4: 
+filename: 
+
+Entry: 26
+dump_id: 6001
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION func7("@param1" test1_dbo.domain1)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_dbo.func7("@param1" test1_dbo.domain1) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1584
+dep 2: 
+filename: 
+
+Entry: 27
+dump_id: 1586
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19488
+tag: proc1(integer, integer)
+description: PROCEDURE
+section: 2
+create_stmt: CREATE PROCEDURE test1_dbo.proc1(IN "@param1" integer, INOUT "@param2" integer)
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', 'begin
+	set @param2 = @param1 + 1;
+end';
+
+drop_stmt: DROP PROCEDURE test1_dbo.proc1(IN "@param1" integer, INOUT "@param2" integer);
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 18
+dep 2: 
+filename: 
+
+Entry: 28
+dump_id: 6002
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: PROCEDURE proc1(IN "@param1" integer, INOUT "@param2" integer)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON PROCEDURE test1_dbo.proc1(IN "@param1" integer, INOUT "@param2" integer) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1586
+dep 2: 
+filename: 
+
+Entry: 29
+dump_id: 1588
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19490
+tag: proc3(test1_dbo.domain1, test1_dbo.domain1)
+description: PROCEDURE
+section: 2
+create_stmt: CREATE PROCEDURE test1_dbo.proc3(IN "@param1" test1_dbo.domain1, INOUT "@param2" test1_dbo.domain1)
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', $$begin
+	set @param2 = concat('Hello ', @param1);
+end$$;
+
+drop_stmt: DROP PROCEDURE test1_dbo.proc3(IN "@param1" test1_dbo.domain1, INOUT "@param2" test1_dbo.domain1);
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 18
+dep 2: 2581
+dep 3: 
+filename: 
+
+Entry: 30
+dump_id: 6003
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: PROCEDURE proc3(IN "@param1" test1_dbo.domain1, INOUT "@param2" test1_dbo.domain1)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON PROCEDURE test1_dbo.proc3(IN "@param1" test1_dbo.domain1, INOUT "@param2" test1_dbo.domain1) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1588
+dep 2: 
+filename: 
+
+Entry: 31
+dump_id: 368
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19460
+tag: tabletype1
+description: TABLE
+section: 2
+create_stmt: SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;
+CREATE TABLE test1_dbo.tabletype1 (
+    id integer,
+    val test1_dbo.domain1
+)
+WITH (bbf_rel_create_date='2023-12-14 12:24:29.197');
+RESET babelfishpg_tsql.restore_tsql_tabletype;
+ALTER TABLE ONLY test1_dbo.tabletype1 ALTER COLUMN id SET (bbf_original_name='id');
+ALTER TABLE ONLY test1_dbo.tabletype1 ALTER COLUMN val SET (bbf_original_name='val');
+
+drop_stmt: DROP TABLE test1_dbo.tabletype1;
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: heap
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 18
+dep 3: 
+filename: 
+
+Entry: 32
+dump_id: 1594
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19492
+tag: proc5(test1_dbo.tabletype1)
+description: PROCEDURE
+section: 2
+create_stmt: CREATE PROCEDURE test1_dbo.proc5(IN "@param1" test1_dbo.tabletype1)
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1"], "original_probin": ""}', 'begin
+	select * from @param1;
+end';
+
+drop_stmt: DROP PROCEDURE test1_dbo.proc5(IN "@param1" test1_dbo.tabletype1);
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 18
+dep 2: 368
+dep 3: 
+filename: 
+
+Entry: 33
+dump_id: 6004
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: PROCEDURE proc5(IN "@param1" test1_dbo.tabletype1)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON PROCEDURE test1_dbo.proc5(IN "@param1" test1_dbo.tabletype1) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1594
+dep 2: 
+filename: 
+
+Entry: 34
+dump_id: 1596
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19522
+tag: trig1()
+description: FUNCTION
+section: 2
+create_stmt: CREATE FUNCTION test1_dbo.trig1() RETURNS trigger
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1"], "original_probin": ""}', 'insert into schema1.tab2(id, val)
+select id, val from inserted';
+
+drop_stmt: DROP FUNCTION test1_dbo.trig1();
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 18
+dep 2: 
+filename: 
+
+Entry: 35
+dump_id: 6005
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION trig1()
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_dbo.trig1() FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1596
+dep 2: 
+filename: 
+
+Entry: 36
+dump_id: 1625
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19471
+tag: func2(integer)
+description: FUNCTION
+section: 2
+create_stmt: CREATE FUNCTION test1_schema1.func2("@param1" integer) RETURNS integer
+    LANGUAGE pltsql STABLE
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', 'begin
+	return @param1 + 1
+end';
+
+drop_stmt: DROP FUNCTION test1_schema1.func2("@param1" integer);
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 20
+dep 2: 
+filename: 
+
+Entry: 37
+dump_id: 6006
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION func2("@param1" integer)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_schema1.func2("@param1" integer) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1625
+dep 2: 
+filename: 
+
+Entry: 38
+dump_id: 1627
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19473
+tag: func4(test1_dbo.domain1)
+description: FUNCTION
+section: 2
+create_stmt: CREATE FUNCTION test1_schema1.func4("@param1" test1_dbo.domain1) RETURNS test1_dbo.domain1
+    LANGUAGE pltsql STABLE
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', $$begin
+	return concat('Hello ', @param1);
+end$$;
+
+drop_stmt: DROP FUNCTION test1_schema1.func4("@param1" test1_dbo.domain1);
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 20
+dep 3: 
+filename: 
+
+Entry: 39
+dump_id: 6007
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION func4("@param1" test1_dbo.domain1)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_schema1.func4("@param1" test1_dbo.domain1) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1627
+dep 2: 
+filename: 
+
+Entry: 40
+dump_id: 1629
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19475
+tag: func6(test1_dbo.domain1)
+description: FUNCTION
+section: 2
+create_stmt: CREATE FUNCTION test1_schema1.func6("@param1" test1_dbo.domain1) RETURNS TABLE(concat test1_schema1.domain2)
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', $$return (
+	select cast(concat('Hello ', @param1) as schema1.domain2)
+)$$;
+
+drop_stmt: DROP FUNCTION test1_schema1.func6("@param1" test1_dbo.domain1);
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 20
+dep 3: 
+filename: 
+
+Entry: 41
+dump_id: 6008
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION func6("@param1" test1_dbo.domain1)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_schema1.func6("@param1" test1_dbo.domain1) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1629
+dep 2: 
+filename: 
+
+Entry: 42
+dump_id: 371
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19482
+tag: @ret1_func8
+description: TABLE
+section: 2
+create_stmt: SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;
+CREATE TABLE test1_schema1."@ret1_func8" (
+    id1 integer,
+    val1 test1_dbo.domain1
+)
+WITH (bbf_rel_create_date='2023-12-14 12:24:29.971');
+RESET babelfishpg_tsql.restore_tsql_tabletype;
+ALTER TABLE ONLY test1_schema1."@ret1_func8" ALTER COLUMN id1 SET (bbf_original_name='id1');
+ALTER TABLE ONLY test1_schema1."@ret1_func8" ALTER COLUMN val1 SET (bbf_original_name='val1');
+
+drop_stmt: DROP TABLE test1_schema1."@ret1_func8";
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: heap
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 20
+dep 3: 
+filename: 
+
+Entry: 43
+dump_id: 1585
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19487
+tag: func8(test1_dbo.domain1)
+description: FUNCTION
+section: 2
+create_stmt: SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;
+CREATE FUNCTION test1_schema1.func8("@param1" test1_dbo.domain1) RETURNS TABLE("@ret1" test1_schema1."@ret1_func8")
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1", "-1"], "original_probin": ""}', 'begin
+	insert @ret1
+	select 42, @param1
+	return;
+end';
+RESET babelfishpg_tsql.restore_tsql_tabletype;
+
+drop_stmt: DROP FUNCTION test1_schema1.func8("@param1" test1_dbo.domain1);
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 20
+dep 2: 371
+dep 3: 2581
+dep 4: 
+filename: 
+
+Entry: 44
+dump_id: 6009
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION func8("@param1" test1_dbo.domain1)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_schema1.func8("@param1" test1_dbo.domain1) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1585
+dep 2: 
+filename: 
+
+Entry: 45
+dump_id: 1587
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19489
+tag: proc2(integer, integer)
+description: PROCEDURE
+section: 2
+create_stmt: CREATE PROCEDURE test1_schema1.proc2(IN "@param1" integer, INOUT "@param2" integer)
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', 'begin
+	set @param2 = @param1 + 1;
+end';
+
+drop_stmt: DROP PROCEDURE test1_schema1.proc2(IN "@param1" integer, INOUT "@param2" integer);
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 20
+dep 2: 
+filename: 
+
+Entry: 46
+dump_id: 6010
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: PROCEDURE proc2(IN "@param1" integer, INOUT "@param2" integer)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON PROCEDURE test1_schema1.proc2(IN "@param1" integer, INOUT "@param2" integer) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1587
+dep 2: 
+filename: 
+
+Entry: 47
+dump_id: 1593
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19491
+tag: proc4(test1_schema1.domain2, test1_schema1.domain2)
+description: PROCEDURE
+section: 2
+create_stmt: CREATE PROCEDURE test1_schema1.proc4(IN "@param1" test1_schema1.domain2, INOUT "@param2" test1_schema1.domain2)
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1", "-1"], "original_probin": ""}', $$begin
+	set @param2 = concat('Hello ', @param1);
+end$$;
+
+drop_stmt: DROP PROCEDURE test1_schema1.proc4(IN "@param1" test1_schema1.domain2, INOUT "@param2" test1_schema1.domain2);
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2584
+dep 2: 20
+dep 3: 
+filename: 
+
+Entry: 48
+dump_id: 6011
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: PROCEDURE proc4(IN "@param1" test1_schema1.domain2, INOUT "@param2" test1_schema1.domain2)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON PROCEDURE test1_schema1.proc4(IN "@param1" test1_schema1.domain2, INOUT "@param2" test1_schema1.domain2) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1593
+dep 2: 
+filename: 
+
+Entry: 49
+dump_id: 369
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19465
+tag: tabletype2
+description: TABLE
+section: 2
+create_stmt: SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;
+CREATE TABLE test1_schema1.tabletype2 (
+    id integer,
+    val test1_schema1.domain2
+)
+WITH (bbf_rel_create_date='2023-12-14 12:24:29.408');
+RESET babelfishpg_tsql.restore_tsql_tabletype;
+ALTER TABLE ONLY test1_schema1.tabletype2 ALTER COLUMN id SET (bbf_original_name='id');
+ALTER TABLE ONLY test1_schema1.tabletype2 ALTER COLUMN val SET (bbf_original_name='val');
+
+drop_stmt: DROP TABLE test1_schema1.tabletype2;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: heap
+owner: test1_dbo
+table_with_oids: false
+dep 1: 20
+dep 2: 2584
+dep 3: 
+filename: 
+
+Entry: 50
+dump_id: 1595
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19493
+tag: proc6(test1_schema1.tabletype2)
+description: PROCEDURE
+section: 2
+create_stmt: CREATE PROCEDURE test1_schema1.proc6(IN "@param1" test1_schema1.tabletype2)
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1"], "original_probin": ""}', 'begin
+	select * from @param1;
+end';
+
+drop_stmt: DROP PROCEDURE test1_schema1.proc6(IN "@param1" test1_schema1.tabletype2);
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 20
+dep 2: 369
+dep 3: 
+filename: 
+
+Entry: 51
+dump_id: 6012
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: PROCEDURE proc6(IN "@param1" test1_schema1.tabletype2)
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON PROCEDURE test1_schema1.proc6(IN "@param1" test1_schema1.tabletype2) FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1595
+dep 2: 
+filename: 
+
+Entry: 52
+dump_id: 1597
+had_dumper: 0
+table_oid: 1255
+catalog_oid: 19524
+tag: trig2()
+description: FUNCTION
+section: 2
+create_stmt: CREATE FUNCTION test1_schema1.trig2() RETURNS trigger
+    LANGUAGE pltsql
+    AS '{"version_num": "1", "typmod_array": ["-1"], "original_probin": ""}', 'insert into schema1.tab3(id, val, parent_id)
+select id + 1, val, id from inserted';
+
+drop_stmt: DROP FUNCTION test1_schema1.trig2();
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 20
+dep 2: 
+filename: 
+
+Entry: 53
+dump_id: 6013
+had_dumper: 0
+table_oid: 0
+catalog_oid: 0
+tag: FUNCTION trig2()
+description: ACL
+section: 1
+create_stmt: REVOKE ALL ON FUNCTION test1_schema1.trig2() FROM PUBLIC;
+
+drop_stmt: 
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 1597
+dep 2: 
+filename: 
+
+Entry: 54
+dump_id: 367
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19450
+tag: sysdatabases
+description: VIEW
+section: 2
+create_stmt: CREATE VIEW test1_dbo.sysdatabases AS
+ SELECT sysdatabases.name,
+    sysdatabases.dbid,
+    sysdatabases.sid,
+    sysdatabases.mode,
+    sysdatabases.status,
+    sysdatabases.status2,
+    sysdatabases.crdate,
+    sysdatabases.reserved,
+    sysdatabases.category,
+    sysdatabases.cmptlevel,
+    sysdatabases.filename,
+    sysdatabases.version
+   FROM sys.sysdatabases;
+
+drop_stmt: DROP VIEW test1_dbo.sysdatabases;
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_db_owner
+table_with_oids: false
+dep 1: 18
+dep 2: 
+filename: 
+
+Entry: 55
+dump_id: 372
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19494
+tag: tab1
+description: TABLE
+section: 2
+create_stmt: CREATE TABLE test1_dbo.tab1 (
+    id integer NOT NULL,
+    val test1_dbo.domain1,
+    CONSTRAINT constr1tab1ef3a496c4c5f975abaaaa58513c5cdda CHECK ((id >= 42))
+)
+WITH (bbf_rel_create_date='2023-12-14 12:24:30.18');
+ALTER TABLE ONLY test1_dbo.tab1 ALTER COLUMN id SET (bbf_original_name='id');
+ALTER TABLE ONLY test1_dbo.tab1 ALTER COLUMN val SET (bbf_original_name='val');
+
+drop_stmt: DROP TABLE test1_dbo.tab1;
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: heap
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2581
+dep 2: 18
+dep 3: 
+filename: 
+
+Entry: 56
+dump_id: 373
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19501
+tag: tab2
+description: TABLE
+section: 2
+create_stmt: CREATE TABLE test1_schema1.tab2 (
+    id integer NOT NULL,
+    val test1_schema1.domain2,
+    CONSTRAINT constr2tab200f7c275e9e0f9f0c7fd2a3a85a16364 CHECK ((id >= 42))
+)
+WITH (bbf_rel_create_date='2023-12-14 12:24:30.358');
+ALTER TABLE ONLY test1_schema1.tab2 ALTER COLUMN id SET (bbf_original_name='id');
+ALTER TABLE ONLY test1_schema1.tab2 ALTER COLUMN val SET (bbf_original_name='val');
+
+drop_stmt: DROP TABLE test1_schema1.tab2;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: heap
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2584
+dep 2: 20
+dep 3: 
+filename: 
+
+Entry: 57
+dump_id: 374
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19508
+tag: tab3
+description: TABLE
+section: 2
+create_stmt: CREATE TABLE test1_schema1.tab3 (
+    id integer NOT NULL,
+    val test1_schema1.domain2,
+    parent_id integer
+)
+WITH (bbf_rel_create_date='2023-12-14 12:24:30.44');
+ALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN id SET (bbf_original_name='id');
+ALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN val SET (bbf_original_name='val');
+ALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN parent_id SET (bbf_original_name='parent_id');
+
+drop_stmt: DROP TABLE test1_schema1.tab3;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: heap
+owner: test1_dbo
+table_with_oids: false
+dep 1: 2584
+dep 2: 20
+dep 3: 
+filename: 
+
+Entry: 58
+dump_id: 5974
+had_dumper: 1
+table_oid: 0
+catalog_oid: 18603
+tag: babelfish_authid_user_ext
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY sys.babelfish_authid_user_ext (rolname, login_name, type, owning_principal_id, is_fixed_role, authentication_type, default_language_lcid, allow_encrypted_value_modifications, create_date, modify_date, orig_username, database_name, default_schema_name, default_language_name, authentication_type_desc, user_can_connect) FROM stdin;
+
+namespace: sys
+tablespace: 
+tableam: 
+owner: postgres
+table_with_oids: false
+dep 1: 246
+dep 2: 
+filename: 5974.dat
+
+Entry: 59
+dump_id: 5975
+had_dumper: 1
+table_oid: 0
+catalog_oid: 18639
+tag: babelfish_domain_mapping
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY sys.babelfish_domain_mapping (netbios_domain_name, fq_domain_name) FROM stdin;
+
+namespace: sys
+tablespace: 
+tableam: 
+owner: postgres
+table_with_oids: false
+dep 1: 251
+dep 2: 
+filename: 5975.dat
+
+Entry: 60
+dump_id: 5976
+had_dumper: 1
+table_oid: 0
+catalog_oid: 18649
+tag: babelfish_extended_properties
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: 
+namespace: sys
+tablespace: 
+tableam: 
+owner: postgres
+table_with_oids: false
+dep 1: 252
+dep 2: 
+filename: 5976.dat
+
+Entry: 61
+dump_id: 5972
+had_dumper: 1
+table_oid: 0
+catalog_oid: 18550
+tag: babelfish_function_ext
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY sys.babelfish_function_ext (nspname, funcname, orig_name, funcsignature, default_positions, flag_validity, flag_values, create_date, modify_date, definition) FROM stdin;
+
+namespace: sys
+tablespace: 
+tableam: 
+owner: postgres
+table_with_oids: false
+dep 1: 238
+dep 2: 
+filename: 5972.dat
+
+Entry: 62
+dump_id: 5971
+had_dumper: 1
+table_oid: 0
+catalog_oid: 18541
+tag: babelfish_sysdatabases
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY sys.babelfish_sysdatabases (status, status2, owner, default_collation, name, crdate, properties) FROM stdin;
+
+namespace: sys
+tablespace: 
+tableam: 
+owner: postgres
+table_with_oids: false
+dep 1: 237
+dep 2: 
+filename: 5971.dat
+
+Entry: 63
+dump_id: 5973
+had_dumper: 1
+table_oid: 0
+catalog_oid: 18558
+tag: babelfish_namespace_ext
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY sys.babelfish_namespace_ext (nspname, orig_name, properties) FROM stdin;
+
+namespace: sys
+tablespace: 
+tableam: 
+owner: postgres
+table_with_oids: false
+dep 1: 239
+dep 2: 
+filename: 5973.dat
+
+Entry: 64
+dump_id: 5970
+had_dumper: 1
+table_oid: 0
+catalog_oid: 18527
+tag: babelfish_view_def
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY sys.babelfish_view_def (schema_name, object_name, definition, flag_validity, flag_values, create_date, modify_date) FROM stdin;
+
+namespace: sys
+tablespace: 
+tableam: 
+owner: postgres
+table_with_oids: false
+dep 1: 235
+dep 2: 
+filename: 5970.dat
+
+Entry: 65
+dump_id: 5979
+had_dumper: 1
+table_oid: 0
+catalog_oid: 19476
+tag: @ret1_func7
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY test1_dbo."@ret1_func7" (id1, val1) FROM stdin;
+
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 370
+dep 2: 
+filename: 5979.dat
+
+Entry: 66
+dump_id: 5981
+had_dumper: 1
+table_oid: 0
+catalog_oid: 19494
+tag: tab1
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY test1_dbo.tab1 (id, val) FROM stdin;
+
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 372
+dep 2: 
+filename: 5981.dat
+
+Entry: 67
+dump_id: 5977
+had_dumper: 1
+table_oid: 0
+catalog_oid: 19460
+tag: tabletype1
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY test1_dbo.tabletype1 (id, val) FROM stdin;
+
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 368
+dep 2: 
+filename: 5977.dat
+
+Entry: 68
+dump_id: 5980
+had_dumper: 1
+table_oid: 0
+catalog_oid: 19482
+tag: @ret1_func8
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY test1_schema1."@ret1_func8" (id1, val1) FROM stdin;
+
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 371
+dep 2: 
+filename: 5980.dat
+
+Entry: 69
+dump_id: 5982
+had_dumper: 1
+table_oid: 0
+catalog_oid: 19501
+tag: tab2
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY test1_schema1.tab2 (id, val) FROM stdin;
+
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 373
+dep 2: 
+filename: 5982.dat
+
+Entry: 70
+dump_id: 5983
+had_dumper: 1
+table_oid: 0
+catalog_oid: 19508
+tag: tab3
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY test1_schema1.tab3 (id, val, parent_id) FROM stdin;
+
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 374
+dep 2: 
+filename: 5983.dat
+
+Entry: 71
+dump_id: 5978
+had_dumper: 1
+table_oid: 0
+catalog_oid: 19465
+tag: tabletype2
+description: TABLE DATA
+section: 3
+create_stmt: 
+drop_stmt: 
+copy_stmt: COPY test1_schema1.tabletype2 (id, val) FROM stdin;
+
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 369
+dep 2: 
+filename: 5978.dat
+
+Entry: 72
+dump_id: 5697
+had_dumper: 0
+table_oid: 2606
+catalog_oid: 19500
+tag: tab1 tab1_pkey
+description: CONSTRAINT
+section: 4
+create_stmt: ALTER TABLE ONLY test1_dbo.tab1
+    ADD CONSTRAINT tab1_pkey PRIMARY KEY (id);
+
+drop_stmt: ALTER TABLE ONLY test1_dbo.tab1 DROP CONSTRAINT tab1_pkey;
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 372
+dep 2: 
+filename: 
+
+Entry: 73
+dump_id: 5700
+had_dumper: 0
+table_oid: 2606
+catalog_oid: 19507
+tag: tab2 tab2_pkey
+description: CONSTRAINT
+section: 4
+create_stmt: ALTER TABLE ONLY test1_schema1.tab2
+    ADD CONSTRAINT tab2_pkey PRIMARY KEY (id);
+
+drop_stmt: ALTER TABLE ONLY test1_schema1.tab2 DROP CONSTRAINT tab2_pkey;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 373
+dep 2: 
+filename: 
+
+Entry: 74
+dump_id: 5702
+had_dumper: 0
+table_oid: 2606
+catalog_oid: 19514
+tag: tab3 tab3_pkey
+description: CONSTRAINT
+section: 4
+create_stmt: ALTER TABLE ONLY test1_schema1.tab3
+    ADD CONSTRAINT tab3_pkey PRIMARY KEY (id);
+
+drop_stmt: ALTER TABLE ONLY test1_schema1.tab3 DROP CONSTRAINT tab3_pkey;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 374
+dep 2: 
+filename: 
+
+Entry: 75
+dump_id: 5695
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19520
+tag: index1tab18df17c77af23061ef4322d47d6c431fa
+description: INDEX
+section: 4
+create_stmt: CREATE INDEX index1tab18df17c77af23061ef4322d47d6c431fa ON test1_dbo.tab1 USING btree (id);
+
+drop_stmt: DROP INDEX test1_dbo.index1tab18df17c77af23061ef4322d47d6c431fa;
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 372
+dep 2: 
+filename: 
+
+Entry: 76
+dump_id: 5698
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19521
+tag: index2tab2032c085dd412302df05b089fed0fd23b
+description: INDEX
+section: 4
+create_stmt: CREATE INDEX index2tab2032c085dd412302df05b089fed0fd23b ON test1_schema1.tab2 USING btree (id);
+
+drop_stmt: DROP INDEX test1_schema1.index2tab2032c085dd412302df05b089fed0fd23b;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 373
+dep 2: 
+filename: 
+
+Entry: 77
+dump_id: 5704
+had_dumper: 0
+table_oid: 2620
+catalog_oid: 19523
+tag: tab1 trig1
+description: TRIGGER
+section: 4
+create_stmt: CREATE TRIGGER trig1 AFTER INSERT OR UPDATE ON test1_dbo.tab1 REFERENCING OLD TABLE AS deleted NEW TABLE AS inserted FOR EACH STATEMENT EXECUTE FUNCTION test1_dbo.trig1();
+
+drop_stmt: DROP TRIGGER trig1 ON test1_dbo.tab1;
+
+copy_stmt: 
+namespace: test1_dbo
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 372
+dep 2: 1596
+dep 3: 
+filename: 
+
+Entry: 78
+dump_id: 5705
+had_dumper: 0
+table_oid: 2620
+catalog_oid: 19525
+tag: tab2 trig2
+description: TRIGGER
+section: 4
+create_stmt: CREATE TRIGGER trig2 AFTER INSERT OR UPDATE ON test1_schema1.tab2 REFERENCING OLD TABLE AS deleted NEW TABLE AS inserted FOR EACH STATEMENT EXECUTE FUNCTION test1_schema1.trig2();
+
+drop_stmt: DROP TRIGGER trig2 ON test1_schema1.tab2;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 373
+dep 2: 1597
+dep 3: 
+filename: 
+
+Entry: 79
+dump_id: 5703
+had_dumper: 0
+table_oid: 2606
+catalog_oid: 19515
+tag: tab3 tab3_parent_id_fkey
+description: FK CONSTRAINT
+section: 4
+create_stmt: ALTER TABLE ONLY test1_schema1.tab3
+    ADD CONSTRAINT tab3_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES test1_schema1.tab2(id);
+
+drop_stmt: ALTER TABLE ONLY test1_schema1.tab3 DROP CONSTRAINT tab3_parent_id_fkey;
+
+copy_stmt: 
+namespace: test1_schema1
+tablespace: 
+tableam: 
+owner: test1_dbo
+table_with_oids: false
+dep 1: 373
+dep 2: 5700
+dep 3: 374
+dep 4: 
+filename: 
+
