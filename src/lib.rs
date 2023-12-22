@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+mod keywords;
 mod rewrite_catalog;
 mod rewrite_sql;
 mod toc_datetime;
@@ -37,6 +38,7 @@ use serde::Deserialize;
 use serde::Serialize;
 use serde_json;
 
+use keywords::KEYWORDS;
 use rewrite_catalog::rewrite_catalog;
 use rewrite_catalog::rewrite_catalog_all_at_once;
 use rewrite_sql::rewrite_schema_in_sql;
@@ -310,6 +312,29 @@ fn modify_toc_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), TocError>
     Ok(())
 }
 
+fn check_dbname(dbname: &str) -> Result<(), TocError> {
+    let error = Err(TocError::new(&format!("Invalid db name specified: [{}]", dbname)));
+    if dbname.is_empty() {
+        return error;
+    }
+    if dbname.trim() != dbname {
+        return error;
+    }
+    let first_char = dbname.chars().nth(0).ok_or(TocError::from_str("First char read error"))?;
+    if !((first_char >= 'a' && first_char <= 'z') || first_char == '_') {
+        return error;
+    }
+    for ch in dbname.chars() {
+        if !((ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9') || (ch == '_')) {
+            return error;
+        }
+    }
+    if KEYWORDS.contains(&dbname) {
+        return error;
+    }
+    Ok(())
+}
+
 pub fn read_toc_to_json<P: AsRef<Path>>(toc_path: P) -> Result<String, TocError> {
     let toc_file = File::open(toc_path)?;
     let mut reader = TocReader::new(BufReader::new(toc_file));
@@ -354,6 +379,7 @@ pub fn print_toc<P: AsRef<Path>, W: Write>(toc_path: P, writer: &mut W) -> Resul
 }
 
 pub fn rewrite_toc<P: AsRef<Path>>(toc_path: P, dbname: &str) -> Result<(), TocError> {
+    check_dbname(dbname)?;
     let toc_src_path = toc_path.as_ref();
     let dir_path = match toc_src_path.canonicalize()?.parent() {
         Some(parent) => parent.to_path_buf(),

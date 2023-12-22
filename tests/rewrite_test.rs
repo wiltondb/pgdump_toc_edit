@@ -39,6 +39,13 @@ fn rewrite_test() {
     copy_dir(&dump_dir, &dest_dump_dir).unwrap();
     let toc_dat = dest_dump_dir.join("toc.dat");
 
+    // dbname checks
+    assert!(pgdump_toc_rewrite::rewrite_toc(&toc_dat, "").is_err());
+    assert!(pgdump_toc_rewrite::rewrite_toc(&toc_dat, "foobar ").is_err());
+    assert!(pgdump_toc_rewrite::rewrite_toc(&toc_dat, " foobar").is_err());
+    assert!(pgdump_toc_rewrite::rewrite_toc(&toc_dat, "\u{0417}\u{0434}\u{0440}\u{0430}\u{0432}\u{0435}\u{0439}\u{0442}\u{0435}").is_err());
+    assert!(pgdump_toc_rewrite::rewrite_toc(&toc_dat, "select").is_err());
+
     pgdump_toc_rewrite::rewrite_toc(&toc_dat, "foobar").unwrap();
 
     let toc_orig = dest_dump_dir.join("toc.dat.orig");
