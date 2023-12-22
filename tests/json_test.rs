@@ -17,7 +17,7 @@ use pgdump_toc_rewrite;
 
 use std::fs;
 use std::fs::File;
-use std::io::BufWriter;
+use std::io::{BufWriter, Write};
 use std::path::Path;
 
 #[test]
@@ -34,6 +34,12 @@ fn json_test() {
     let toc_dat_dest = work_dir.join("toc.dat");
 
     let toc_json_st = pgdump_toc_rewrite::read_toc_to_json(&toc_dat).unwrap();
+    {
+        let toc_json_test_path = work_dir.join("toc.json");
+        let toc_json_test_file = File::create(&toc_json_test_path).unwrap();
+        let mut writer = BufWriter::new(toc_json_test_file);
+        writer.write_all(toc_json_st.as_bytes()).unwrap();
+    }
     let toc_json_orig = resources_dir.join("toc.json");
     let toc_json_orig_st = fs::read_to_string(&toc_json_orig).unwrap();
     assert_eq!(toc_json_orig_st, toc_json_st);

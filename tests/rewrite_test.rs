@@ -74,14 +74,14 @@ fn rewrite_test() {
     let toc_st = fs::read_to_string(toc_txt).unwrap();
     assert_eq!(toc_foobar_st, toc_st);
 
-    assert!(dest_dump_dir.join("5971.dat.orig.gz").exists());
-    assert!(dest_dump_dir.join("5972.dat.orig.gz").exists());
-    assert!(dest_dump_dir.join("5973.dat.orig.gz").exists());
-    assert!(dest_dump_dir.join("5974.dat.orig.gz").exists());
-    assert!(dest_dump_dir.join("5976.dat.orig.gz").exists());
+    assert!(dest_dump_dir.join("5981.dat.orig.gz").exists());
+    assert!(dest_dump_dir.join("5982.dat.orig.gz").exists());
+    assert!(dest_dump_dir.join("5983.dat.orig.gz").exists());
+    assert!(dest_dump_dir.join("5984.dat.orig.gz").exists());
+    assert!(dest_dump_dir.join("5986.dat.orig.gz").exists());
 
-    let function_ext_gz_orig = dump_dir.join("5972.dat.gz");
-    let function_ext_gz = dest_dump_dir.join("5972.dat.gz");
+    let function_ext_gz_orig = dump_dir.join("5982.dat.gz");
+    let function_ext_gz = dest_dump_dir.join("5982.dat.gz");
 
     let mut function_ext_reader_orig = BufReader::new(GzDecoder::new(BufReader::new(File::open(&function_ext_gz_orig).unwrap())));
     let mut function_ext_orig_st = String::new();

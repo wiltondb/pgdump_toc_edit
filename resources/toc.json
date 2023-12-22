@@ -18,16 +18,16 @@
       "03"
     ],
     "compression": 6,
-    "timestamp": "2023-11-14 12:24:34",
+    "timestamp": "2023-11-22 17:42:55",
     "is_dst": false,
     "postgres_dbname": "wilton",
     "version_server": "15.4",
     "version_pgdump": "15.4",
-    "toc_count": 79
+    "toc_count": 81
   },
   "entries": [
     {
-      "dump_id": 5986,
+      "dump_id": 5996,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -48,7 +48,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5987,
+      "dump_id": 5997,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -69,7 +69,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5988,
+      "dump_id": 5998,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -90,7 +90,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5989,
+      "dump_id": 5999,
       "had_dumper": 0,
       "table_oid": "1262",
       "catalog_oid": "16385",
@@ -111,7 +111,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5990,
+      "dump_id": 6000,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -127,13 +127,13 @@
       "owner": "wilton",
       "table_with_oids": "false",
       "deps": [
-        "5989",
+        "5999",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 5991,
+      "dump_id": 6001,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -154,7 +154,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5992,
+      "dump_id": 6002,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -178,7 +178,7 @@
       "dump_id": 18,
       "had_dumper": 0,
       "table_oid": "2615",
-      "catalog_oid": "19449",
+      "catalog_oid": "19367",
       "tag": "test1_dbo",
       "description": "SCHEMA",
       "section": 2,
@@ -196,7 +196,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5993,
+      "dump_id": 6003,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -221,7 +221,7 @@
       "dump_id": 19,
       "had_dumper": 0,
       "table_oid": "2615",
-      "catalog_oid": "19454",
+      "catalog_oid": "19372",
       "tag": "test1_guest",
       "description": "SCHEMA",
       "section": 2,
@@ -239,7 +239,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5994,
+      "dump_id": 6004,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -264,7 +264,7 @@
       "dump_id": 20,
       "had_dumper": 0,
       "table_oid": "2615",
-      "catalog_oid": "19455",
+      "catalog_oid": "19373",
       "tag": "test1_schema1",
       "description": "SCHEMA",
       "section": 2,
@@ -282,7 +282,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5995,
+      "dump_id": 6005,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -304,10 +304,10 @@
       "filename": ""
     },
     {
-      "dump_id": 2581,
+      "dump_id": 2584,
       "had_dumper": 0,
       "table_oid": "1247",
-      "catalog_oid": "19457",
+      "catalog_oid": "19375",
       "tag": "domain1",
       "description": "DOMAIN",
       "section": 2,
@@ -326,7 +326,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5996,
+      "dump_id": 6006,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -342,16 +342,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
+        "2584",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 2584,
+      "dump_id": 2587,
       "had_dumper": 0,
       "table_oid": "1247",
-      "catalog_oid": "19459",
+      "catalog_oid": "19377",
       "tag": "domain2",
       "description": "DOMAIN",
       "section": 2,
@@ -370,7 +370,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5997,
+      "dump_id": 6007,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -386,16 +386,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2584",
+        "2587",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1624,
+      "dump_id": 1625,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19470",
+      "catalog_oid": "19388",
       "tag": "func1(integer)",
       "description": "FUNCTION",
       "section": 2,
@@ -414,7 +414,7 @@
       "filename": ""
     },
     {
-      "dump_id": 5998,
+      "dump_id": 6008,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -430,16 +430,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1624",
+        "1625",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1626,
+      "dump_id": 1627,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19472",
+      "catalog_oid": "19390",
       "tag": "func3(test1_dbo.domain1)",
       "description": "FUNCTION",
       "section": 2,
@@ -452,14 +452,14 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
+        "2584",
         "18",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 5999,
+      "dump_id": 6009,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -475,16 +475,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1626",
+        "1627",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1628,
+      "dump_id": 1630,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19474",
+      "catalog_oid": "19392",
       "tag": "func5(test1_dbo.domain1)",
       "description": "FUNCTION",
       "section": 2,
@@ -497,14 +497,14 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
         "18",
+        "2584",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 6000,
+      "dump_id": 6010,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -520,7 +520,7 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1628",
+        "1630",
         null
       ],
       "filename": ""
@@ -529,11 +529,11 @@
       "dump_id": 370,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19476",
+      "catalog_oid": "19394",
       "tag": "@ret1_func7",
       "description": "TABLE",
       "section": 2,
-      "create_stmt": "SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;\nCREATE TABLE test1_dbo.\"@ret1_func7\" (\n    id1 integer,\n    val1 test1_dbo.domain1\n)\nWITH (bbf_rel_create_date='2023-12-14 12:24:29.848');\nRESET babelfishpg_tsql.restore_tsql_tabletype;\nALTER TABLE ONLY test1_dbo.\"@ret1_func7\" ALTER COLUMN id1 SET (bbf_original_name='id1');\nALTER TABLE ONLY test1_dbo.\"@ret1_func7\" ALTER COLUMN val1 SET (bbf_original_name='val1');\n",
+      "create_stmt": "SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;\nCREATE TABLE test1_dbo.\"@ret1_func7\" (\n    id1 integer,\n    val1 test1_dbo.domain1\n)\nWITH (bbf_rel_create_date='2023-12-22 17:42:04.094');\nRESET babelfishpg_tsql.restore_tsql_tabletype;\nALTER TABLE ONLY test1_dbo.\"@ret1_func7\" ALTER COLUMN id1 SET (bbf_original_name='id1');\nALTER TABLE ONLY test1_dbo.\"@ret1_func7\" ALTER COLUMN val1 SET (bbf_original_name='val1');\n",
       "drop_stmt": "DROP TABLE test1_dbo.\"@ret1_func7\";\n",
       "copy_stmt": null,
       "namespace": "test1_dbo",
@@ -542,17 +542,17 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
         "18",
+        "2584",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1584,
+      "dump_id": 1629,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19481",
+      "catalog_oid": "19399",
       "tag": "func7(test1_dbo.domain1)",
       "description": "FUNCTION",
       "section": 2,
@@ -566,14 +566,14 @@
       "table_with_oids": "false",
       "deps": [
         "370",
-        "2581",
         "18",
+        "2584",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 6001,
+      "dump_id": 6011,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -589,16 +589,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1584",
+        "1629",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1586,
+      "dump_id": 1577,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19488",
+      "catalog_oid": "19406",
       "tag": "proc1(integer, integer)",
       "description": "PROCEDURE",
       "section": 2,
@@ -617,7 +617,7 @@
       "filename": ""
     },
     {
-      "dump_id": 6002,
+      "dump_id": 6012,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -633,16 +633,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1586",
+        "1577",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1588,
+      "dump_id": 1579,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19490",
+      "catalog_oid": "19408",
       "tag": "proc3(test1_dbo.domain1, test1_dbo.domain1)",
       "description": "PROCEDURE",
       "section": 2,
@@ -656,13 +656,13 @@
       "table_with_oids": "false",
       "deps": [
         "18",
-        "2581",
+        "2584",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 6003,
+      "dump_id": 6013,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -678,7 +678,7 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1588",
+        "1579",
         null
       ],
       "filename": ""
@@ -687,11 +687,11 @@
       "dump_id": 368,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19460",
+      "catalog_oid": "19378",
       "tag": "tabletype1",
       "description": "TABLE",
       "section": 2,
-      "create_stmt": "SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;\nCREATE TABLE test1_dbo.tabletype1 (\n    id integer,\n    val test1_dbo.domain1\n)\nWITH (bbf_rel_create_date='2023-12-14 12:24:29.197');\nRESET babelfishpg_tsql.restore_tsql_tabletype;\nALTER TABLE ONLY test1_dbo.tabletype1 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_dbo.tabletype1 ALTER COLUMN val SET (bbf_original_name='val');\n",
+      "create_stmt": "SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;\nCREATE TABLE test1_dbo.tabletype1 (\n    id integer,\n    val test1_dbo.domain1\n)\nWITH (bbf_rel_create_date='2023-12-22 17:42:03.367');\nRESET babelfishpg_tsql.restore_tsql_tabletype;\nALTER TABLE ONLY test1_dbo.tabletype1 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_dbo.tabletype1 ALTER COLUMN val SET (bbf_original_name='val');\n",
       "drop_stmt": "DROP TABLE test1_dbo.tabletype1;\n",
       "copy_stmt": null,
       "namespace": "test1_dbo",
@@ -700,17 +700,17 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
+        "2584",
         "18",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1594,
+      "dump_id": 1581,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19492",
+      "catalog_oid": "19410",
       "tag": "proc5(test1_dbo.tabletype1)",
       "description": "PROCEDURE",
       "section": 2,
@@ -723,14 +723,14 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "18",
         "368",
+        "18",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 6004,
+      "dump_id": 6014,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -746,16 +746,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1594",
+        "1581",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1596,
+      "dump_id": 1583,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19522",
+      "catalog_oid": "19448",
       "tag": "trig1()",
       "description": "FUNCTION",
       "section": 2,
@@ -774,7 +774,7 @@
       "filename": ""
     },
     {
-      "dump_id": 6005,
+      "dump_id": 6015,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -790,16 +790,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1596",
+        "1583",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1625,
+      "dump_id": 1626,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19471",
+      "catalog_oid": "19389",
       "tag": "func2(integer)",
       "description": "FUNCTION",
       "section": 2,
@@ -818,7 +818,7 @@
       "filename": ""
     },
     {
-      "dump_id": 6006,
+      "dump_id": 6016,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -834,16 +834,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1625",
+        "1626",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1627,
+      "dump_id": 1628,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19473",
+      "catalog_oid": "19391",
       "tag": "func4(test1_dbo.domain1)",
       "description": "FUNCTION",
       "section": 2,
@@ -856,14 +856,14 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
+        "2584",
         "20",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 6007,
+      "dump_id": 6017,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -879,16 +879,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1627",
+        "1628",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1629,
+      "dump_id": 1631,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19475",
+      "catalog_oid": "19393",
       "tag": "func6(test1_dbo.domain1)",
       "description": "FUNCTION",
       "section": 2,
@@ -901,14 +901,14 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
         "20",
+        "2584",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 6008,
+      "dump_id": 6018,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -924,7 +924,7 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1629",
+        "1631",
         null
       ],
       "filename": ""
@@ -933,11 +933,11 @@
       "dump_id": 371,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19482",
+      "catalog_oid": "19400",
       "tag": "@ret1_func8",
       "description": "TABLE",
       "section": 2,
-      "create_stmt": "SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;\nCREATE TABLE test1_schema1.\"@ret1_func8\" (\n    id1 integer,\n    val1 test1_dbo.domain1\n)\nWITH (bbf_rel_create_date='2023-12-14 12:24:29.971');\nRESET babelfishpg_tsql.restore_tsql_tabletype;\nALTER TABLE ONLY test1_schema1.\"@ret1_func8\" ALTER COLUMN id1 SET (bbf_original_name='id1');\nALTER TABLE ONLY test1_schema1.\"@ret1_func8\" ALTER COLUMN val1 SET (bbf_original_name='val1');\n",
+      "create_stmt": "SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;\nCREATE TABLE test1_schema1.\"@ret1_func8\" (\n    id1 integer,\n    val1 test1_dbo.domain1\n)\nWITH (bbf_rel_create_date='2023-12-22 17:42:04.233');\nRESET babelfishpg_tsql.restore_tsql_tabletype;\nALTER TABLE ONLY test1_schema1.\"@ret1_func8\" ALTER COLUMN id1 SET (bbf_original_name='id1');\nALTER TABLE ONLY test1_schema1.\"@ret1_func8\" ALTER COLUMN val1 SET (bbf_original_name='val1');\n",
       "drop_stmt": "DROP TABLE test1_schema1.\"@ret1_func8\";\n",
       "copy_stmt": null,
       "namespace": "test1_schema1",
@@ -946,17 +946,17 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
         "20",
+        "2584",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1585,
+      "dump_id": 1576,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19487",
+      "catalog_oid": "19405",
       "tag": "func8(test1_dbo.domain1)",
       "description": "FUNCTION",
       "section": 2,
@@ -970,14 +970,14 @@
       "table_with_oids": "false",
       "deps": [
         "20",
+        "2584",
         "371",
-        "2581",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 6009,
+      "dump_id": 6019,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -993,16 +993,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1585",
+        "1576",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1587,
+      "dump_id": 1578,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19489",
+      "catalog_oid": "19407",
       "tag": "proc2(integer, integer)",
       "description": "PROCEDURE",
       "section": 2,
@@ -1021,7 +1021,7 @@
       "filename": ""
     },
     {
-      "dump_id": 6010,
+      "dump_id": 6020,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -1037,16 +1037,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1587",
+        "1578",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1593,
+      "dump_id": 1580,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19491",
+      "catalog_oid": "19409",
       "tag": "proc4(test1_schema1.domain2, test1_schema1.domain2)",
       "description": "PROCEDURE",
       "section": 2,
@@ -1059,14 +1059,14 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2584",
+        "2587",
         "20",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 6011,
+      "dump_id": 6021,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -1082,7 +1082,7 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1593",
+        "1580",
         null
       ],
       "filename": ""
@@ -1091,11 +1091,11 @@
       "dump_id": 369,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19465",
+      "catalog_oid": "19383",
       "tag": "tabletype2",
       "description": "TABLE",
       "section": 2,
-      "create_stmt": "SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;\nCREATE TABLE test1_schema1.tabletype2 (\n    id integer,\n    val test1_schema1.domain2\n)\nWITH (bbf_rel_create_date='2023-12-14 12:24:29.408');\nRESET babelfishpg_tsql.restore_tsql_tabletype;\nALTER TABLE ONLY test1_schema1.tabletype2 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_schema1.tabletype2 ALTER COLUMN val SET (bbf_original_name='val');\n",
+      "create_stmt": "SET babelfishpg_tsql.restore_tsql_tabletype = TRUE;\nCREATE TABLE test1_schema1.tabletype2 (\n    id integer,\n    val test1_schema1.domain2\n)\nWITH (bbf_rel_create_date='2023-12-22 17:42:03.593');\nRESET babelfishpg_tsql.restore_tsql_tabletype;\nALTER TABLE ONLY test1_schema1.tabletype2 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_schema1.tabletype2 ALTER COLUMN val SET (bbf_original_name='val');\n",
       "drop_stmt": "DROP TABLE test1_schema1.tabletype2;\n",
       "copy_stmt": null,
       "namespace": "test1_schema1",
@@ -1104,17 +1104,17 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
+        "2587",
         "20",
-        "2584",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1595,
+      "dump_id": 1582,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19493",
+      "catalog_oid": "19411",
       "tag": "proc6(test1_schema1.tabletype2)",
       "description": "PROCEDURE",
       "section": 2,
@@ -1134,7 +1134,7 @@
       "filename": ""
     },
     {
-      "dump_id": 6012,
+      "dump_id": 6022,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -1150,16 +1150,16 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1595",
+        "1582",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 1597,
+      "dump_id": 1591,
       "had_dumper": 0,
       "table_oid": "1255",
-      "catalog_oid": "19524",
+      "catalog_oid": "19450",
       "tag": "trig2()",
       "description": "FUNCTION",
       "section": 2,
@@ -1178,7 +1178,7 @@
       "filename": ""
     },
     {
-      "dump_id": 6013,
+      "dump_id": 6023,
       "had_dumper": 0,
       "table_oid": "0",
       "catalog_oid": "0",
@@ -1194,7 +1194,7 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "1597",
+        "1591",
         null
       ],
       "filename": ""
@@ -1203,7 +1203,7 @@
       "dump_id": 367,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19450",
+      "catalog_oid": "19368",
       "tag": "sysdatabases",
       "description": "VIEW",
       "section": 2,
@@ -1225,11 +1225,11 @@
       "dump_id": 372,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19494",
+      "catalog_oid": "19412",
       "tag": "tab1",
       "description": "TABLE",
       "section": 2,
-      "create_stmt": "CREATE TABLE test1_dbo.tab1 (\n    id integer NOT NULL,\n    val test1_dbo.domain1,\n    CONSTRAINT constr1tab1ef3a496c4c5f975abaaaa58513c5cdda CHECK ((id >= 42))\n)\nWITH (bbf_rel_create_date='2023-12-14 12:24:30.18');\nALTER TABLE ONLY test1_dbo.tab1 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_dbo.tab1 ALTER COLUMN val SET (bbf_original_name='val');\n",
+      "create_stmt": "CREATE TABLE test1_dbo.tab1 (\n    id integer NOT NULL,\n    val test1_dbo.domain1,\n    CONSTRAINT constr1tab1ef3a496c4c5f975abaaaa58513c5cdda CHECK ((id >= 42))\n)\nWITH (bbf_rel_create_date='2023-12-22 17:42:04.463');\nALTER TABLE ONLY test1_dbo.tab1 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_dbo.tab1 ALTER COLUMN val SET (bbf_original_name='val');\n",
       "drop_stmt": "DROP TABLE test1_dbo.tab1;\n",
       "copy_stmt": null,
       "namespace": "test1_dbo",
@@ -1238,7 +1238,32 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2581",
+        "2584",
+        "18",
+        null
+      ],
+      "filename": ""
+    },
+    {
+      "dump_id": 375,
+      "had_dumper": 0,
+      "table_oid": "1259",
+      "catalog_oid": "19438",
+      "tag": "view1",
+      "description": "VIEW",
+      "section": 2,
+      "create_stmt": "CREATE VIEW test1_dbo.view1 AS\n SELECT tab1.id,\n    tab1.val\n   FROM test1_dbo.tab1;\n",
+      "drop_stmt": "DROP VIEW test1_dbo.view1;\n",
+      "copy_stmt": null,
+      "namespace": "test1_dbo",
+      "tablespace": null,
+      "tableam": null,
+      "owner": "test1_dbo",
+      "table_with_oids": "false",
+      "deps": [
+        "372",
+        "372",
+        "2584",
         "18",
         null
       ],
@@ -1248,11 +1273,11 @@
       "dump_id": 373,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19501",
+      "catalog_oid": "19419",
       "tag": "tab2",
       "description": "TABLE",
       "section": 2,
-      "create_stmt": "CREATE TABLE test1_schema1.tab2 (\n    id integer NOT NULL,\n    val test1_schema1.domain2,\n    CONSTRAINT constr2tab200f7c275e9e0f9f0c7fd2a3a85a16364 CHECK ((id >= 42))\n)\nWITH (bbf_rel_create_date='2023-12-14 12:24:30.358');\nALTER TABLE ONLY test1_schema1.tab2 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_schema1.tab2 ALTER COLUMN val SET (bbf_original_name='val');\n",
+      "create_stmt": "CREATE TABLE test1_schema1.tab2 (\n    id integer NOT NULL,\n    val test1_schema1.domain2,\n    CONSTRAINT constr2tab200f7c275e9e0f9f0c7fd2a3a85a16364 CHECK ((id >= 42))\n)\nWITH (bbf_rel_create_date='2023-12-22 17:42:04.665');\nALTER TABLE ONLY test1_schema1.tab2 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_schema1.tab2 ALTER COLUMN val SET (bbf_original_name='val');\n",
       "drop_stmt": "DROP TABLE test1_schema1.tab2;\n",
       "copy_stmt": null,
       "namespace": "test1_schema1",
@@ -1261,7 +1286,7 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2584",
+        "2587",
         "20",
         null
       ],
@@ -1271,11 +1296,11 @@
       "dump_id": 374,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19508",
+      "catalog_oid": "19426",
       "tag": "tab3",
       "description": "TABLE",
       "section": 2,
-      "create_stmt": "CREATE TABLE test1_schema1.tab3 (\n    id integer NOT NULL,\n    val test1_schema1.domain2,\n    parent_id integer\n)\nWITH (bbf_rel_create_date='2023-12-14 12:24:30.44');\nALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN val SET (bbf_original_name='val');\nALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN parent_id SET (bbf_original_name='parent_id');\n",
+      "create_stmt": "CREATE TABLE test1_schema1.tab3 (\n    id integer NOT NULL,\n    val test1_schema1.domain2,\n    parent_id integer\n)\nWITH (bbf_rel_create_date='2023-12-22 17:42:04.752');\nALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN id SET (bbf_original_name='id');\nALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN val SET (bbf_original_name='val');\nALTER TABLE ONLY test1_schema1.tab3 ALTER COLUMN parent_id SET (bbf_original_name='parent_id');\n",
       "drop_stmt": "DROP TABLE test1_schema1.tab3;\n",
       "copy_stmt": null,
       "namespace": "test1_schema1",
@@ -1284,14 +1309,39 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
-        "2584",
+        "2587",
         "20",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 5974,
+      "dump_id": 376,
+      "had_dumper": 0,
+      "table_oid": "1259",
+      "catalog_oid": "19442",
+      "tag": "view2",
+      "description": "VIEW",
+      "section": 2,
+      "create_stmt": "CREATE VIEW test1_schema1.view2 AS\n SELECT tab2.id,\n    tab2.val\n   FROM test1_schema1.tab2;\n",
+      "drop_stmt": "DROP VIEW test1_schema1.view2;\n",
+      "copy_stmt": null,
+      "namespace": "test1_schema1",
+      "tablespace": null,
+      "tableam": null,
+      "owner": "test1_dbo",
+      "table_with_oids": "false",
+      "deps": [
+        "373",
+        "373",
+        "2587",
+        "20",
+        null
+      ],
+      "filename": ""
+    },
+    {
+      "dump_id": 5984,
       "had_dumper": 1,
       "table_oid": "0",
       "catalog_oid": "18603",
@@ -1310,10 +1360,10 @@
         "246",
         null
       ],
-      "filename": "5974.dat"
+      "filename": "5984.dat"
     },
     {
-      "dump_id": 5975,
+      "dump_id": 5985,
       "had_dumper": 1,
       "table_oid": "0",
       "catalog_oid": "18639",
@@ -1332,10 +1382,10 @@
         "251",
         null
       ],
-      "filename": "5975.dat"
+      "filename": "5985.dat"
     },
     {
-      "dump_id": 5976,
+      "dump_id": 5986,
       "had_dumper": 1,
       "table_oid": "0",
       "catalog_oid": "18649",
@@ -1354,10 +1404,10 @@
         "252",
         null
       ],
-      "filename": "5976.dat"
+      "filename": "5986.dat"
     },
     {
-      "dump_id": 5972,
+      "dump_id": 5982,
       "had_dumper": 1,
       "table_oid": "0",
       "catalog_oid": "18550",
@@ -1376,10 +1426,10 @@
         "238",
         null
       ],
-      "filename": "5972.dat"
+      "filename": "5982.dat"
     },
     {
-      "dump_id": 5971,
+      "dump_id": 5981,
       "had_dumper": 1,
       "table_oid": "0",
       "catalog_oid": "18541",
@@ -1398,10 +1448,10 @@
         "237",
         null
       ],
-      "filename": "5971.dat"
+      "filename": "5981.dat"
     },
     {
-      "dump_id": 5973,
+      "dump_id": 5983,
       "had_dumper": 1,
       "table_oid": "0",
       "catalog_oid": "18558",
@@ -1420,10 +1470,10 @@
         "239",
         null
       ],
-      "filename": "5973.dat"
+      "filename": "5983.dat"
     },
     {
-      "dump_id": 5970,
+      "dump_id": 5980,
       "had_dumper": 1,
       "table_oid": "0",
       "catalog_oid": "18527",
@@ -1442,13 +1492,13 @@
         "235",
         null
       ],
-      "filename": "5970.dat"
+      "filename": "5980.dat"
     },
     {
-      "dump_id": 5979,
+      "dump_id": 5989,
       "had_dumper": 1,
       "table_oid": "0",
-      "catalog_oid": "19476",
+      "catalog_oid": "19394",
       "tag": "@ret1_func7",
       "description": "TABLE DATA",
       "section": 3,
@@ -1464,13 +1514,13 @@
         "370",
         null
       ],
-      "filename": "5979.dat"
+      "filename": "5989.dat"
     },
     {
-      "dump_id": 5981,
+      "dump_id": 5991,
       "had_dumper": 1,
       "table_oid": "0",
-      "catalog_oid": "19494",
+      "catalog_oid": "19412",
       "tag": "tab1",
       "description": "TABLE DATA",
       "section": 3,
@@ -1486,13 +1536,13 @@
         "372",
         null
       ],
-      "filename": "5981.dat"
+      "filename": "5991.dat"
     },
     {
-      "dump_id": 5977,
+      "dump_id": 5987,
       "had_dumper": 1,
       "table_oid": "0",
-      "catalog_oid": "19460",
+      "catalog_oid": "19378",
       "tag": "tabletype1",
       "description": "TABLE DATA",
       "section": 3,
@@ -1508,13 +1558,13 @@
         "368",
         null
       ],
-      "filename": "5977.dat"
+      "filename": "5987.dat"
     },
     {
-      "dump_id": 5980,
+      "dump_id": 5990,
       "had_dumper": 1,
       "table_oid": "0",
-      "catalog_oid": "19482",
+      "catalog_oid": "19400",
       "tag": "@ret1_func8",
       "description": "TABLE DATA",
       "section": 3,
@@ -1530,13 +1580,13 @@
         "371",
         null
       ],
-      "filename": "5980.dat"
+      "filename": "5990.dat"
     },
     {
-      "dump_id": 5982,
+      "dump_id": 5992,
       "had_dumper": 1,
       "table_oid": "0",
-      "catalog_oid": "19501",
+      "catalog_oid": "19419",
       "tag": "tab2",
       "description": "TABLE DATA",
       "section": 3,
@@ -1552,13 +1602,13 @@
         "373",
         null
       ],
-      "filename": "5982.dat"
+      "filename": "5992.dat"
     },
     {
-      "dump_id": 5983,
+      "dump_id": 5993,
       "had_dumper": 1,
       "table_oid": "0",
-      "catalog_oid": "19508",
+      "catalog_oid": "19426",
       "tag": "tab3",
       "description": "TABLE DATA",
       "section": 3,
@@ -1574,13 +1624,13 @@
         "374",
         null
       ],
-      "filename": "5983.dat"
+      "filename": "5993.dat"
     },
     {
-      "dump_id": 5978,
+      "dump_id": 5988,
       "had_dumper": 1,
       "table_oid": "0",
-      "catalog_oid": "19465",
+      "catalog_oid": "19383",
       "tag": "tabletype2",
       "description": "TABLE DATA",
       "section": 3,
@@ -1596,13 +1646,13 @@
         "369",
         null
       ],
-      "filename": "5978.dat"
+      "filename": "5988.dat"
     },
     {
-      "dump_id": 5697,
+      "dump_id": 5705,
       "had_dumper": 0,
       "table_oid": "2606",
-      "catalog_oid": "19500",
+      "catalog_oid": "19418",
       "tag": "tab1 tab1_pkey",
       "description": "CONSTRAINT",
       "section": 4,
@@ -1621,10 +1671,10 @@
       "filename": ""
     },
     {
-      "dump_id": 5700,
+      "dump_id": 5708,
       "had_dumper": 0,
       "table_oid": "2606",
-      "catalog_oid": "19507",
+      "catalog_oid": "19425",
       "tag": "tab2 tab2_pkey",
       "description": "CONSTRAINT",
       "section": 4,
@@ -1643,10 +1693,10 @@
       "filename": ""
     },
     {
-      "dump_id": 5702,
+      "dump_id": 5710,
       "had_dumper": 0,
       "table_oid": "2606",
-      "catalog_oid": "19514",
+      "catalog_oid": "19432",
       "tag": "tab3 tab3_pkey",
       "description": "CONSTRAINT",
       "section": 4,
@@ -1665,10 +1715,10 @@
       "filename": ""
     },
     {
-      "dump_id": 5695,
+      "dump_id": 5703,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19520",
+      "catalog_oid": "19446",
       "tag": "index1tab18df17c77af23061ef4322d47d6c431fa",
       "description": "INDEX",
       "section": 4,
@@ -1687,10 +1737,10 @@
       "filename": ""
     },
     {
-      "dump_id": 5698,
+      "dump_id": 5706,
       "had_dumper": 0,
       "table_oid": "1259",
-      "catalog_oid": "19521",
+      "catalog_oid": "19447",
       "tag": "index2tab2032c085dd412302df05b089fed0fd23b",
       "description": "INDEX",
       "section": 4,
@@ -1709,10 +1759,10 @@
       "filename": ""
     },
     {
-      "dump_id": 5704,
+      "dump_id": 5712,
       "had_dumper": 0,
       "table_oid": "2620",
-      "catalog_oid": "19523",
+      "catalog_oid": "19449",
       "tag": "tab1 trig1",
       "description": "TRIGGER",
       "section": 4,
@@ -1725,17 +1775,17 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
+        "1583",
         "372",
-        "1596",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 5705,
+      "dump_id": 5713,
       "had_dumper": 0,
       "table_oid": "2620",
-      "catalog_oid": "19525",
+      "catalog_oid": "19451",
       "tag": "tab2 trig2",
       "description": "TRIGGER",
       "section": 4,
@@ -1748,17 +1798,17 @@
       "owner": "test1_dbo",
       "table_with_oids": "false",
       "deps": [
+        "1591",
         "373",
-        "1597",
         null
       ],
       "filename": ""
     },
     {
-      "dump_id": 5703,
+      "dump_id": 5711,
       "had_dumper": 0,
       "table_oid": "2606",
-      "catalog_oid": "19515",
+      "catalog_oid": "19433",
       "tag": "tab3 tab3_parent_id_fkey",
       "description": "FK CONSTRAINT",
       "section": 4,
@@ -1772,7 +1822,7 @@
       "table_with_oids": "false",
       "deps": [
         "373",
-        "5700",
+        "5708",
         "374",
         null
       ],

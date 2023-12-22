@@ -2,14 +2,14 @@ Magic: PGDMP
 Dump format version: 1.14.0
 Size of int: 4
 Compression level: 6
-Timestamp: 2023-11-14 12:24:34
+Timestamp: 2023-11-22 17:42:55
 DST: false
 Postgres DB: wilton
 Server version: 15.4
 pg_dump version: 15.4
-TOC entries: 79
+TOC entries: 81
 Entry: 1
-dump_id: 5986
+dump_id: 5996
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -29,7 +29,7 @@ dep 1:
 filename: 
 
 Entry: 2
-dump_id: 5987
+dump_id: 5997
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -49,7 +49,7 @@ dep 1:
 filename: 
 
 Entry: 3
-dump_id: 5988
+dump_id: 5998
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -69,7 +69,7 @@ dep 1:
 filename: 
 
 Entry: 4
-dump_id: 5989
+dump_id: 5999
 had_dumper: 0
 table_oid: 1262
 catalog_oid: 16385
@@ -90,7 +90,7 @@ dep 1:
 filename: 
 
 Entry: 5
-dump_id: 5990
+dump_id: 6000
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -118,12 +118,12 @@ tablespace:
 tableam: 
 owner: wilton
 table_with_oids: false
-dep 1: 5989
+dep 1: 5999
 dep 2: 
 filename: 
 
 Entry: 6
-dump_id: 5991
+dump_id: 6001
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -145,7 +145,7 @@ dep 1:
 filename: 
 
 Entry: 7
-dump_id: 5992
+dump_id: 6002
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -168,7 +168,7 @@ Entry: 8
 dump_id: 18
 had_dumper: 0
 table_oid: 2615
-catalog_oid: 19449
+catalog_oid: 19367
 tag: foobar_dbo
 description: SCHEMA
 section: 2
@@ -186,7 +186,7 @@ dep 1:
 filename: 
 
 Entry: 9
-dump_id: 5993
+dump_id: 6003
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -210,7 +210,7 @@ Entry: 10
 dump_id: 19
 had_dumper: 0
 table_oid: 2615
-catalog_oid: 19454
+catalog_oid: 19372
 tag: foobar_guest
 description: SCHEMA
 section: 2
@@ -228,7 +228,7 @@ dep 1:
 filename: 
 
 Entry: 11
-dump_id: 5994
+dump_id: 6004
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -252,7 +252,7 @@ Entry: 12
 dump_id: 20
 had_dumper: 0
 table_oid: 2615
-catalog_oid: 19455
+catalog_oid: 19373
 tag: foobar_schema1
 description: SCHEMA
 section: 2
@@ -270,7 +270,7 @@ dep 1:
 filename: 
 
 Entry: 13
-dump_id: 5995
+dump_id: 6005
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -291,10 +291,10 @@ dep 2:
 filename: 
 
 Entry: 14
-dump_id: 2581
+dump_id: 2584
 had_dumper: 0
 table_oid: 1247
-catalog_oid: 19457
+catalog_oid: 19375
 tag: domain1
 description: DOMAIN
 section: 2
@@ -313,7 +313,7 @@ dep 2:
 filename: 
 
 Entry: 15
-dump_id: 5996
+dump_id: 6006
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -329,15 +329,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
+dep 1: 2584
 dep 2: 
 filename: 
 
 Entry: 16
-dump_id: 2584
+dump_id: 2587
 had_dumper: 0
 table_oid: 1247
-catalog_oid: 19459
+catalog_oid: 19377
 tag: domain2
 description: DOMAIN
 section: 2
@@ -356,7 +356,7 @@ dep 2:
 filename: 
 
 Entry: 17
-dump_id: 5997
+dump_id: 6007
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -372,15 +372,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2584
+dep 1: 2587
 dep 2: 
 filename: 
 
 Entry: 18
-dump_id: 1624
+dump_id: 1625
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19470
+catalog_oid: 19388
 tag: func1(integer)
 description: FUNCTION
 section: 2
@@ -403,7 +403,7 @@ dep 2:
 filename: 
 
 Entry: 19
-dump_id: 5998
+dump_id: 6008
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -419,15 +419,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1624
+dep 1: 1625
 dep 2: 
 filename: 
 
 Entry: 20
-dump_id: 1626
+dump_id: 1627
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19472
+catalog_oid: 19390
 tag: func3(foobar_dbo.domain1)
 description: FUNCTION
 section: 2
@@ -445,13 +445,13 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
+dep 1: 2584
 dep 2: 18
 dep 3: 
 filename: 
 
 Entry: 21
-dump_id: 5999
+dump_id: 6009
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -467,15 +467,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1626
+dep 1: 1627
 dep 2: 
 filename: 
 
 Entry: 22
-dump_id: 1628
+dump_id: 1630
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19474
+catalog_oid: 19392
 tag: func5(foobar_dbo.domain1)
 description: FUNCTION
 section: 2
@@ -493,13 +493,13 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
-dep 2: 18
+dep 1: 18
+dep 2: 2584
 dep 3: 
 filename: 
 
 Entry: 23
-dump_id: 6000
+dump_id: 6010
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -515,7 +515,7 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1628
+dep 1: 1630
 dep 2: 
 filename: 
 
@@ -523,7 +523,7 @@ Entry: 24
 dump_id: 370
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19476
+catalog_oid: 19394
 tag: @ret1_func7
 description: TABLE
 section: 2
@@ -532,7 +532,7 @@ CREATE TABLE foobar_dbo."@ret1_func7" (
     id1 integer,
     val1 foobar_dbo.domain1
 )
-WITH (bbf_rel_create_date='2023-12-14 12:24:29.848');
+WITH (bbf_rel_create_date='2023-12-22 17:42:04.094');
 RESET babelfishpg_tsql.restore_tsql_tabletype;
 ALTER TABLE ONLY foobar_dbo."@ret1_func7" ALTER COLUMN id1 SET (bbf_original_name='id1');
 ALTER TABLE ONLY foobar_dbo."@ret1_func7" ALTER COLUMN val1 SET (bbf_original_name='val1');
@@ -545,16 +545,16 @@ tablespace:
 tableam: heap
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
-dep 2: 18
+dep 1: 18
+dep 2: 2584
 dep 3: 
 filename: 
 
 Entry: 25
-dump_id: 1584
+dump_id: 1629
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19481
+catalog_oid: 19399
 tag: func7(foobar_dbo.domain1)
 description: FUNCTION
 section: 2
@@ -577,13 +577,13 @@ tableam:
 owner: foobar_dbo
 table_with_oids: false
 dep 1: 370
-dep 2: 2581
-dep 3: 18
+dep 2: 18
+dep 3: 2584
 dep 4: 
 filename: 
 
 Entry: 26
-dump_id: 6001
+dump_id: 6011
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -599,15 +599,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1584
+dep 1: 1629
 dep 2: 
 filename: 
 
 Entry: 27
-dump_id: 1586
+dump_id: 1577
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19488
+catalog_oid: 19406
 tag: proc1(integer, integer)
 description: PROCEDURE
 section: 2
@@ -630,7 +630,7 @@ dep 2:
 filename: 
 
 Entry: 28
-dump_id: 6002
+dump_id: 6012
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -646,15 +646,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1586
+dep 1: 1577
 dep 2: 
 filename: 
 
 Entry: 29
-dump_id: 1588
+dump_id: 1579
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19490
+catalog_oid: 19408
 tag: proc3(foobar_dbo.domain1, foobar_dbo.domain1)
 description: PROCEDURE
 section: 2
@@ -673,12 +673,12 @@ tableam:
 owner: foobar_dbo
 table_with_oids: false
 dep 1: 18
-dep 2: 2581
+dep 2: 2584
 dep 3: 
 filename: 
 
 Entry: 30
-dump_id: 6003
+dump_id: 6013
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -694,7 +694,7 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1588
+dep 1: 1579
 dep 2: 
 filename: 
 
@@ -702,7 +702,7 @@ Entry: 31
 dump_id: 368
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19460
+catalog_oid: 19378
 tag: tabletype1
 description: TABLE
 section: 2
@@ -711,7 +711,7 @@ CREATE TABLE foobar_dbo.tabletype1 (
     id integer,
     val foobar_dbo.domain1
 )
-WITH (bbf_rel_create_date='2023-12-14 12:24:29.197');
+WITH (bbf_rel_create_date='2023-12-22 17:42:03.367');
 RESET babelfishpg_tsql.restore_tsql_tabletype;
 ALTER TABLE ONLY foobar_dbo.tabletype1 ALTER COLUMN id SET (bbf_original_name='id');
 ALTER TABLE ONLY foobar_dbo.tabletype1 ALTER COLUMN val SET (bbf_original_name='val');
@@ -724,16 +724,16 @@ tablespace:
 tableam: heap
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
+dep 1: 2584
 dep 2: 18
 dep 3: 
 filename: 
 
 Entry: 32
-dump_id: 1594
+dump_id: 1581
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19492
+catalog_oid: 19410
 tag: proc5(foobar_dbo.tabletype1)
 description: PROCEDURE
 section: 2
@@ -751,13 +751,13 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 18
-dep 2: 368
+dep 1: 368
+dep 2: 18
 dep 3: 
 filename: 
 
 Entry: 33
-dump_id: 6004
+dump_id: 6014
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -773,15 +773,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1594
+dep 1: 1581
 dep 2: 
 filename: 
 
 Entry: 34
-dump_id: 1596
+dump_id: 1583
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19522
+catalog_oid: 19448
 tag: trig1()
 description: FUNCTION
 section: 2
@@ -803,7 +803,7 @@ dep 2:
 filename: 
 
 Entry: 35
-dump_id: 6005
+dump_id: 6015
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -819,15 +819,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1596
+dep 1: 1583
 dep 2: 
 filename: 
 
 Entry: 36
-dump_id: 1625
+dump_id: 1626
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19471
+catalog_oid: 19389
 tag: func2(integer)
 description: FUNCTION
 section: 2
@@ -850,7 +850,7 @@ dep 2:
 filename: 
 
 Entry: 37
-dump_id: 6006
+dump_id: 6016
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -866,15 +866,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1625
+dep 1: 1626
 dep 2: 
 filename: 
 
 Entry: 38
-dump_id: 1627
+dump_id: 1628
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19473
+catalog_oid: 19391
 tag: func4(foobar_dbo.domain1)
 description: FUNCTION
 section: 2
@@ -892,13 +892,13 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
+dep 1: 2584
 dep 2: 20
 dep 3: 
 filename: 
 
 Entry: 39
-dump_id: 6007
+dump_id: 6017
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -914,15 +914,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1627
+dep 1: 1628
 dep 2: 
 filename: 
 
 Entry: 40
-dump_id: 1629
+dump_id: 1631
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19475
+catalog_oid: 19393
 tag: func6(foobar_dbo.domain1)
 description: FUNCTION
 section: 2
@@ -940,13 +940,13 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
-dep 2: 20
+dep 1: 20
+dep 2: 2584
 dep 3: 
 filename: 
 
 Entry: 41
-dump_id: 6008
+dump_id: 6018
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -962,7 +962,7 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1629
+dep 1: 1631
 dep 2: 
 filename: 
 
@@ -970,7 +970,7 @@ Entry: 42
 dump_id: 371
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19482
+catalog_oid: 19400
 tag: @ret1_func8
 description: TABLE
 section: 2
@@ -979,7 +979,7 @@ CREATE TABLE foobar_schema1."@ret1_func8" (
     id1 integer,
     val1 foobar_dbo.domain1
 )
-WITH (bbf_rel_create_date='2023-12-14 12:24:29.971');
+WITH (bbf_rel_create_date='2023-12-22 17:42:04.233');
 RESET babelfishpg_tsql.restore_tsql_tabletype;
 ALTER TABLE ONLY foobar_schema1."@ret1_func8" ALTER COLUMN id1 SET (bbf_original_name='id1');
 ALTER TABLE ONLY foobar_schema1."@ret1_func8" ALTER COLUMN val1 SET (bbf_original_name='val1');
@@ -992,16 +992,16 @@ tablespace:
 tableam: heap
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
-dep 2: 20
+dep 1: 20
+dep 2: 2584
 dep 3: 
 filename: 
 
 Entry: 43
-dump_id: 1585
+dump_id: 1576
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19487
+catalog_oid: 19405
 tag: func8(foobar_dbo.domain1)
 description: FUNCTION
 section: 2
@@ -1024,13 +1024,13 @@ tableam:
 owner: foobar_dbo
 table_with_oids: false
 dep 1: 20
-dep 2: 371
-dep 3: 2581
+dep 2: 2584
+dep 3: 371
 dep 4: 
 filename: 
 
 Entry: 44
-dump_id: 6009
+dump_id: 6019
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -1046,15 +1046,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1585
+dep 1: 1576
 dep 2: 
 filename: 
 
 Entry: 45
-dump_id: 1587
+dump_id: 1578
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19489
+catalog_oid: 19407
 tag: proc2(integer, integer)
 description: PROCEDURE
 section: 2
@@ -1077,7 +1077,7 @@ dep 2:
 filename: 
 
 Entry: 46
-dump_id: 6010
+dump_id: 6020
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -1093,15 +1093,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1587
+dep 1: 1578
 dep 2: 
 filename: 
 
 Entry: 47
-dump_id: 1593
+dump_id: 1580
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19491
+catalog_oid: 19409
 tag: proc4(foobar_schema1.domain2, foobar_schema1.domain2)
 description: PROCEDURE
 section: 2
@@ -1119,13 +1119,13 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2584
+dep 1: 2587
 dep 2: 20
 dep 3: 
 filename: 
 
 Entry: 48
-dump_id: 6011
+dump_id: 6021
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -1141,7 +1141,7 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1593
+dep 1: 1580
 dep 2: 
 filename: 
 
@@ -1149,7 +1149,7 @@ Entry: 49
 dump_id: 369
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19465
+catalog_oid: 19383
 tag: tabletype2
 description: TABLE
 section: 2
@@ -1158,7 +1158,7 @@ CREATE TABLE foobar_schema1.tabletype2 (
     id integer,
     val foobar_schema1.domain2
 )
-WITH (bbf_rel_create_date='2023-12-14 12:24:29.408');
+WITH (bbf_rel_create_date='2023-12-22 17:42:03.593');
 RESET babelfishpg_tsql.restore_tsql_tabletype;
 ALTER TABLE ONLY foobar_schema1.tabletype2 ALTER COLUMN id SET (bbf_original_name='id');
 ALTER TABLE ONLY foobar_schema1.tabletype2 ALTER COLUMN val SET (bbf_original_name='val');
@@ -1171,16 +1171,16 @@ tablespace:
 tableam: heap
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 20
-dep 2: 2584
+dep 1: 2587
+dep 2: 20
 dep 3: 
 filename: 
 
 Entry: 50
-dump_id: 1595
+dump_id: 1582
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19493
+catalog_oid: 19411
 tag: proc6(foobar_schema1.tabletype2)
 description: PROCEDURE
 section: 2
@@ -1204,7 +1204,7 @@ dep 3:
 filename: 
 
 Entry: 51
-dump_id: 6012
+dump_id: 6022
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -1220,15 +1220,15 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1595
+dep 1: 1582
 dep 2: 
 filename: 
 
 Entry: 52
-dump_id: 1597
+dump_id: 1591
 had_dumper: 0
 table_oid: 1255
-catalog_oid: 19524
+catalog_oid: 19450
 tag: trig2()
 description: FUNCTION
 section: 2
@@ -1250,7 +1250,7 @@ dep 2:
 filename: 
 
 Entry: 53
-dump_id: 6013
+dump_id: 6023
 had_dumper: 0
 table_oid: 0
 catalog_oid: 0
@@ -1266,7 +1266,7 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 1597
+dep 1: 1591
 dep 2: 
 filename: 
 
@@ -1274,7 +1274,7 @@ Entry: 54
 dump_id: 367
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19450
+catalog_oid: 19368
 tag: sysdatabases
 description: VIEW
 section: 2
@@ -1309,7 +1309,7 @@ Entry: 55
 dump_id: 372
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19494
+catalog_oid: 19412
 tag: tab1
 description: TABLE
 section: 2
@@ -1318,7 +1318,7 @@ create_stmt: CREATE TABLE foobar_dbo.tab1 (
     val foobar_dbo.domain1,
     CONSTRAINT constr1tab1ef3a496c4c5f975abaaaa58513c5cdda CHECK ((id >= 42))
 )
-WITH (bbf_rel_create_date='2023-12-14 12:24:30.18');
+WITH (bbf_rel_create_date='2023-12-22 17:42:04.463');
 ALTER TABLE ONLY foobar_dbo.tab1 ALTER COLUMN id SET (bbf_original_name='id');
 ALTER TABLE ONLY foobar_dbo.tab1 ALTER COLUMN val SET (bbf_original_name='val');
 
@@ -1330,16 +1330,44 @@ tablespace:
 tableam: heap
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2581
+dep 1: 2584
 dep 2: 18
 dep 3: 
 filename: 
 
 Entry: 56
+dump_id: 375
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19438
+tag: view1
+description: VIEW
+section: 2
+create_stmt: CREATE VIEW foobar_dbo.view1 AS
+ SELECT tab1.id,
+    tab1.val
+   FROM foobar_dbo.tab1;
+
+drop_stmt: DROP VIEW foobar_dbo.view1;
+
+copy_stmt: 
+namespace: foobar_dbo
+tablespace: 
+tableam: 
+owner: foobar_dbo
+table_with_oids: false
+dep 1: 372
+dep 2: 372
+dep 3: 2584
+dep 4: 18
+dep 5: 
+filename: 
+
+Entry: 57
 dump_id: 373
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19501
+catalog_oid: 19419
 tag: tab2
 description: TABLE
 section: 2
@@ -1348,7 +1376,7 @@ create_stmt: CREATE TABLE foobar_schema1.tab2 (
     val foobar_schema1.domain2,
     CONSTRAINT constr2tab200f7c275e9e0f9f0c7fd2a3a85a16364 CHECK ((id >= 42))
 )
-WITH (bbf_rel_create_date='2023-12-14 12:24:30.358');
+WITH (bbf_rel_create_date='2023-12-22 17:42:04.665');
 ALTER TABLE ONLY foobar_schema1.tab2 ALTER COLUMN id SET (bbf_original_name='id');
 ALTER TABLE ONLY foobar_schema1.tab2 ALTER COLUMN val SET (bbf_original_name='val');
 
@@ -1360,16 +1388,16 @@ tablespace:
 tableam: heap
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2584
+dep 1: 2587
 dep 2: 20
 dep 3: 
 filename: 
 
-Entry: 57
+Entry: 58
 dump_id: 374
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19508
+catalog_oid: 19426
 tag: tab3
 description: TABLE
 section: 2
@@ -1378,7 +1406,7 @@ create_stmt: CREATE TABLE foobar_schema1.tab3 (
     val foobar_schema1.domain2,
     parent_id integer
 )
-WITH (bbf_rel_create_date='2023-12-14 12:24:30.44');
+WITH (bbf_rel_create_date='2023-12-22 17:42:04.752');
 ALTER TABLE ONLY foobar_schema1.tab3 ALTER COLUMN id SET (bbf_original_name='id');
 ALTER TABLE ONLY foobar_schema1.tab3 ALTER COLUMN val SET (bbf_original_name='val');
 ALTER TABLE ONLY foobar_schema1.tab3 ALTER COLUMN parent_id SET (bbf_original_name='parent_id');
@@ -1391,13 +1419,41 @@ tablespace:
 tableam: heap
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 2584
+dep 1: 2587
 dep 2: 20
 dep 3: 
 filename: 
 
-Entry: 58
-dump_id: 5974
+Entry: 59
+dump_id: 376
+had_dumper: 0
+table_oid: 1259
+catalog_oid: 19442
+tag: view2
+description: VIEW
+section: 2
+create_stmt: CREATE VIEW foobar_schema1.view2 AS
+ SELECT tab2.id,
+    tab2.val
+   FROM foobar_schema1.tab2;
+
+drop_stmt: DROP VIEW foobar_schema1.view2;
+
+copy_stmt: 
+namespace: foobar_schema1
+tablespace: 
+tableam: 
+owner: foobar_dbo
+table_with_oids: false
+dep 1: 373
+dep 2: 373
+dep 3: 2587
+dep 4: 20
+dep 5: 
+filename: 
+
+Entry: 60
+dump_id: 5984
 had_dumper: 1
 table_oid: 0
 catalog_oid: 18603
@@ -1415,10 +1471,10 @@ owner: postgres
 table_with_oids: false
 dep 1: 246
 dep 2: 
-filename: 5974.dat
+filename: 5984.dat
 
-Entry: 59
-dump_id: 5975
+Entry: 61
+dump_id: 5985
 had_dumper: 1
 table_oid: 0
 catalog_oid: 18639
@@ -1436,10 +1492,10 @@ owner: postgres
 table_with_oids: false
 dep 1: 251
 dep 2: 
-filename: 5975.dat
+filename: 5985.dat
 
-Entry: 60
-dump_id: 5976
+Entry: 62
+dump_id: 5986
 had_dumper: 1
 table_oid: 0
 catalog_oid: 18649
@@ -1456,10 +1512,10 @@ owner: postgres
 table_with_oids: false
 dep 1: 252
 dep 2: 
-filename: 5976.dat
+filename: 5986.dat
 
-Entry: 61
-dump_id: 5972
+Entry: 63
+dump_id: 5982
 had_dumper: 1
 table_oid: 0
 catalog_oid: 18550
@@ -1477,10 +1533,10 @@ owner: postgres
 table_with_oids: false
 dep 1: 238
 dep 2: 
-filename: 5972.dat
+filename: 5982.dat
 
-Entry: 62
-dump_id: 5971
+Entry: 64
+dump_id: 5981
 had_dumper: 1
 table_oid: 0
 catalog_oid: 18541
@@ -1498,10 +1554,10 @@ owner: postgres
 table_with_oids: false
 dep 1: 237
 dep 2: 
-filename: 5971.dat
+filename: 5981.dat
 
-Entry: 63
-dump_id: 5973
+Entry: 65
+dump_id: 5983
 had_dumper: 1
 table_oid: 0
 catalog_oid: 18558
@@ -1519,10 +1575,10 @@ owner: postgres
 table_with_oids: false
 dep 1: 239
 dep 2: 
-filename: 5973.dat
+filename: 5983.dat
 
-Entry: 64
-dump_id: 5970
+Entry: 66
+dump_id: 5980
 had_dumper: 1
 table_oid: 0
 catalog_oid: 18527
@@ -1540,13 +1596,13 @@ owner: postgres
 table_with_oids: false
 dep 1: 235
 dep 2: 
-filename: 5970.dat
+filename: 5980.dat
 
-Entry: 65
-dump_id: 5979
+Entry: 67
+dump_id: 5989
 had_dumper: 1
 table_oid: 0
-catalog_oid: 19476
+catalog_oid: 19394
 tag: @ret1_func7
 description: TABLE DATA
 section: 3
@@ -1561,13 +1617,13 @@ owner: foobar_dbo
 table_with_oids: false
 dep 1: 370
 dep 2: 
-filename: 5979.dat
+filename: 5989.dat
 
-Entry: 66
-dump_id: 5981
+Entry: 68
+dump_id: 5991
 had_dumper: 1
 table_oid: 0
-catalog_oid: 19494
+catalog_oid: 19412
 tag: tab1
 description: TABLE DATA
 section: 3
@@ -1582,13 +1638,13 @@ owner: foobar_dbo
 table_with_oids: false
 dep 1: 372
 dep 2: 
-filename: 5981.dat
+filename: 5991.dat
 
-Entry: 67
-dump_id: 5977
+Entry: 69
+dump_id: 5987
 had_dumper: 1
 table_oid: 0
-catalog_oid: 19460
+catalog_oid: 19378
 tag: tabletype1
 description: TABLE DATA
 section: 3
@@ -1603,13 +1659,13 @@ owner: foobar_dbo
 table_with_oids: false
 dep 1: 368
 dep 2: 
-filename: 5977.dat
+filename: 5987.dat
 
-Entry: 68
-dump_id: 5980
+Entry: 70
+dump_id: 5990
 had_dumper: 1
 table_oid: 0
-catalog_oid: 19482
+catalog_oid: 19400
 tag: @ret1_func8
 description: TABLE DATA
 section: 3
@@ -1624,13 +1680,13 @@ owner: foobar_dbo
 table_with_oids: false
 dep 1: 371
 dep 2: 
-filename: 5980.dat
+filename: 5990.dat
 
-Entry: 69
-dump_id: 5982
+Entry: 71
+dump_id: 5992
 had_dumper: 1
 table_oid: 0
-catalog_oid: 19501
+catalog_oid: 19419
 tag: tab2
 description: TABLE DATA
 section: 3
@@ -1645,13 +1701,13 @@ owner: foobar_dbo
 table_with_oids: false
 dep 1: 373
 dep 2: 
-filename: 5982.dat
+filename: 5992.dat
 
-Entry: 70
-dump_id: 5983
+Entry: 72
+dump_id: 5993
 had_dumper: 1
 table_oid: 0
-catalog_oid: 19508
+catalog_oid: 19426
 tag: tab3
 description: TABLE DATA
 section: 3
@@ -1666,13 +1722,13 @@ owner: foobar_dbo
 table_with_oids: false
 dep 1: 374
 dep 2: 
-filename: 5983.dat
+filename: 5993.dat
 
-Entry: 71
-dump_id: 5978
+Entry: 73
+dump_id: 5988
 had_dumper: 1
 table_oid: 0
-catalog_oid: 19465
+catalog_oid: 19383
 tag: tabletype2
 description: TABLE DATA
 section: 3
@@ -1687,13 +1743,13 @@ owner: foobar_dbo
 table_with_oids: false
 dep 1: 369
 dep 2: 
-filename: 5978.dat
+filename: 5988.dat
 
-Entry: 72
-dump_id: 5697
+Entry: 74
+dump_id: 5705
 had_dumper: 0
 table_oid: 2606
-catalog_oid: 19500
+catalog_oid: 19418
 tag: tab1 tab1_pkey
 description: CONSTRAINT
 section: 4
@@ -1712,11 +1768,11 @@ dep 1: 372
 dep 2: 
 filename: 
 
-Entry: 73
-dump_id: 5700
+Entry: 75
+dump_id: 5708
 had_dumper: 0
 table_oid: 2606
-catalog_oid: 19507
+catalog_oid: 19425
 tag: tab2 tab2_pkey
 description: CONSTRAINT
 section: 4
@@ -1735,11 +1791,11 @@ dep 1: 373
 dep 2: 
 filename: 
 
-Entry: 74
-dump_id: 5702
+Entry: 76
+dump_id: 5710
 had_dumper: 0
 table_oid: 2606
-catalog_oid: 19514
+catalog_oid: 19432
 tag: tab3 tab3_pkey
 description: CONSTRAINT
 section: 4
@@ -1758,11 +1814,11 @@ dep 1: 374
 dep 2: 
 filename: 
 
-Entry: 75
-dump_id: 5695
+Entry: 77
+dump_id: 5703
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19520
+catalog_oid: 19446
 tag: index1tab18df17c77af23061ef4322d47d6c431fa
 description: INDEX
 section: 4
@@ -1780,11 +1836,11 @@ dep 1: 372
 dep 2: 
 filename: 
 
-Entry: 76
-dump_id: 5698
+Entry: 78
+dump_id: 5706
 had_dumper: 0
 table_oid: 1259
-catalog_oid: 19521
+catalog_oid: 19447
 tag: index2tab2032c085dd412302df05b089fed0fd23b
 description: INDEX
 section: 4
@@ -1802,11 +1858,11 @@ dep 1: 373
 dep 2: 
 filename: 
 
-Entry: 77
-dump_id: 5704
+Entry: 79
+dump_id: 5712
 had_dumper: 0
 table_oid: 2620
-catalog_oid: 19523
+catalog_oid: 19449
 tag: tab1 trig1
 description: TRIGGER
 section: 4
@@ -1820,16 +1876,16 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 372
-dep 2: 1596
+dep 1: 1583
+dep 2: 372
 dep 3: 
 filename: 
 
-Entry: 78
-dump_id: 5705
+Entry: 80
+dump_id: 5713
 had_dumper: 0
 table_oid: 2620
-catalog_oid: 19525
+catalog_oid: 19451
 tag: tab2 trig2
 description: TRIGGER
 section: 4
@@ -1843,16 +1899,16 @@ tablespace:
 tableam: 
 owner: foobar_dbo
 table_with_oids: false
-dep 1: 373
-dep 2: 1597
+dep 1: 1591
+dep 2: 373
 dep 3: 
 filename: 
 
-Entry: 79
-dump_id: 5703
+Entry: 81
+dump_id: 5711
 had_dumper: 0
 table_oid: 2606
-catalog_oid: 19515
+catalog_oid: 19433
 tag: tab3 tab3_parent_id_fkey
 description: FK CONSTRAINT
 section: 4
@@ -1868,7 +1924,7 @@ tableam:
 owner: foobar_dbo
 table_with_oids: false
 dep 1: 373
-dep 2: 5700
+dep 2: 5708
 dep 3: 374
 dep 4: 
 filename: 

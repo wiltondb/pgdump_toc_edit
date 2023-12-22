@@ -148,6 +148,14 @@ create table schema1.tab3 (
 );
 go
 
+-- view
+
+create view view1 as select * from tab1
+go
+
+create view schema1.view2 as select * from schema1.tab2
+go
+
 -- index
 
 create clustered index index1 ON tab1 (id);
