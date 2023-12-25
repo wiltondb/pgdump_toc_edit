@@ -391,6 +391,13 @@ fn reorder_babelfish_catalogs(entries: &mut Vec<TocEntry>) -> Result<(), TocErro
     Ok(())
 }
 
+/// Reads `pg_dump` TOC as a JSON string.
+///
+/// TOC file `toc.dat` is created by `pg_dump` when it is run with directory format (`-Z d` flag).
+///
+/// # Arguments
+///
+/// * `toc_path` - Path to `pg_dump` TOC file
 pub fn read_toc_to_json<P: AsRef<Path>>(toc_path: P) -> Result<String, TocError> {
     let toc_file = File::open(toc_path)?;
     let mut reader = TocReader::new(BufReader::new(toc_file));
@@ -405,6 +412,14 @@ pub fn read_toc_to_json<P: AsRef<Path>>(toc_path: P) -> Result<String, TocError>
     Ok(res)
 }
 
+/// Writes `pg_dump` TOC from a JSON string.
+///
+/// JSON string can be generated with `read_toc_json`.
+///
+/// # Arguments
+///
+/// * `toc_path` - Path to destination TOC file
+/// * `toc_json` - JSON string
 pub fn write_toc_from_json<P: AsRef<Path>>(toc_path: P, toc_json: &str) -> Result<(), TocError> {
     if toc_path.as_ref().exists() {
         return Err(TocError::new(&format!("TOC file already exists on path: {}", toc_path.as_ref().to_string_lossy())));
@@ -421,6 +436,14 @@ pub fn write_toc_from_json<P: AsRef<Path>>(toc_path: P, toc_json: &str) -> Resul
     Ok(())
 }
 
+/// Prints `pg_dump` TOC contents to the specified writer.
+///
+/// TOC file `toc.dat` is created by `pg_dump` when it is run with directory format (`-Z d` flag).
+///
+/// # Arguments
+///
+/// * `toc_path` - Path to `pg_dump` TOC file
+/// * `writer` - Destination writer.
 pub fn print_toc<P: AsRef<Path>, W: Write>(toc_path: P, writer: &mut W) -> Result<(), TocError> {
     let toc_file = File::open(toc_path)?;
     let mut reader = TocReader::new(BufReader::new(toc_file));
@@ -434,6 +457,14 @@ pub fn print_toc<P: AsRef<Path>, W: Write>(toc_path: P, writer: &mut W) -> Resul
     Ok(())
 }
 
+/// Rewrites `pg_dump` TOC and catalogs contents with the specified DB name.
+///
+/// TOC file `toc.dat` is created by `pg_dump` when it is run with directory format (`-Z d` flag).
+///
+/// # Arguments
+///
+/// * `toc_path` - Path to `pg_dump` TOC file
+/// * `dbname` - New name for logical database.
 pub fn rewrite_toc<P: AsRef<Path>>(toc_path: P, dbname: &str) -> Result<(), TocError> {
     check_dbname(dbname)?;
     let toc_src_path = toc_path.as_ref();
