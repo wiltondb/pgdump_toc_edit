@@ -15,6 +15,7 @@
  */
 
 use std::io;
+use std::process;
 
 use clap::Arg;
 use clap::ArgAction;
@@ -48,15 +49,17 @@ fn main() {
     let print = args.get_one::<bool>("print").map_or(false, |b| *b);
 
     if print {
-        let _ = pgdump_toc_rewrite::print_toc(&toc_file, &mut io::stdout());
-        return;
-    }
-
-    if let Some(name) = dbname {
-        match pgdump_toc_rewrite::rewrite_toc(&toc_file, &name) {
-            Ok(_) => {},
-            Err(e) => panic!("{}", e)
+        match pgdump_toc_rewrite::print_toc(&toc_file, &mut io::stdout()) {
+            Ok(_) => process::exit(0),
+            Err(e) => eprintln!("TOC print error: {}", e)
         }
+    } else if let Some(name) = dbname {
+        match pgdump_toc_rewrite::rewrite_toc(&toc_file, &name) {
+            Ok(_) => process::exit(0),
+            Err(e) => eprintln!("TOC rewrite error: {}", e)
+        }
+    } else {
+        eprintln!("Error: either 'rewrite' or 'print' flag must be specified")
     }
-
+    process::exit(1);
 }
