@@ -34,7 +34,6 @@ impl<W: Write> TocWriter<W> {
         }
     }
 
-    // todo: int size
     pub(crate) fn write_int(&mut self, val: i32) -> Result<(), TocError> {
         let mut buf = [0u8; 5];
         let uval = if val >= 0 {
@@ -108,6 +107,7 @@ impl<W: Write> TocWriter<W> {
         for dp in &te.deps {
             self.write_string(dp)?;
         }
+        self.write_string(&TocString::none())?;
         self.write_string(&te.filename)?;
         Ok(())
     }

@@ -68,7 +68,6 @@ impl<R: Read> TocReader<R> {
         Ok(buf)
     }
 
-    // todo: int size
     pub(crate) fn read_int(&mut self) -> Result<i32, TocError> {
         let mut buf = [0u8; 5];
         self.reader.read_exact( &mut buf)?;
@@ -159,11 +158,10 @@ impl<R: Read> TocReader<R> {
         let mut deps: Vec<TocString> = Vec::new();
         loop {
             let st = self.read_string()?;
-            let none = st.opt.is_none();
-            deps.push(st);
-            if none {
+            if st.opt.is_none() {
                 break
             }
+            deps.push(st);
         }
         let filename = self.read_string()?;
         Ok(TocEntry {

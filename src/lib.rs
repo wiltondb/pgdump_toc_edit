@@ -335,6 +335,62 @@ fn check_dbname(dbname: &str) -> Result<(), TocError> {
     Ok(())
 }
 
+fn reorder_babelfish_catalogs(entries: &mut Vec<TocEntry>) -> Result<(), TocError> {
+    let mut sysdatabases_idx = 0usize;
+    let mut extended_properties_idx = 0usize;
+    let mut function_ext_idx = 0usize;
+    let mut namespace_ext_idx = 0usize;
+    let mut view_def_idx = 0usize;
+    for idx in 0..entries.len() {
+        let te = &entries[idx];
+        if te.description.to_string()? == "TABLE DATA" {
+            let tag = te.tag.to_string()?;
+            if tag == "babelfish_sysdatabases" {
+                sysdatabases_idx = idx;
+            } else if tag == "babelfish_extended_properties" {
+                extended_properties_idx = idx;
+            } else if tag == "babelfish_function_ext" {
+                function_ext_idx = idx;
+            } else if tag == "babelfish_namespace_ext" {
+                namespace_ext_idx = idx;
+            } else if tag == "babelfish_view_def" {
+                view_def_idx = idx;
+            }
+        }
+    }
+
+    if 0 == sysdatabases_idx {
+        return Err(TocError::from_str("Invalid TOC, 'babelfish_sysdatabases' table data must be present"));
+    }
+
+    let mut indices = vec!(
+        &mut extended_properties_idx,
+        &mut function_ext_idx,
+        &mut namespace_ext_idx,
+        &mut view_def_idx
+    );
+
+    // bubble sort variation
+    loop {
+        let mut swapped = false;
+        for i in 0..indices.len()  {
+            let idx = &mut indices[i];
+            if **idx > 0 && **idx < sysdatabases_idx {
+                entries.swap(**idx, sysdatabases_idx);
+                let tmp = **idx;
+                **idx = sysdatabases_idx;
+                sysdatabases_idx = tmp;
+                swapped = true;
+            }
+        }
+        if !swapped {
+            break;
+        }
+    }
+
+    Ok(())
+}
+
 pub fn read_toc_to_json<P: AsRef<Path>>(toc_path: P) -> Result<String, TocError> {
     let toc_file = File::open(toc_path)?;
     let mut reader = TocReader::new(BufReader::new(toc_file));
@@ -392,10 +448,17 @@ pub fn rewrite_toc<P: AsRef<Path>>(toc_path: P, dbname: &str) -> Result<(), TocE
     let mut writer = TocWriter::new(BufWriter::new(dest_file));
 
     let header = reader.read_header()?;
+    let mut entries = Vec::with_capacity(header.toc_count as usize);
+    for _ in 0..header.toc_count {
+        let te  = reader.read_entry()?;
+        entries.push(te);
+    }
+
+    reorder_babelfish_catalogs(&mut entries)?;
+
     writer.write_header(&header)?;
     let mut ctx = TocCtx::new(header, &dbname);
-    for _ in 0..ctx.header.toc_count {
-        let mut te  = reader.read_entry()?;
+    for mut te in entries {
         modify_toc_entry(&mut ctx, &mut te)?;
         writer.write_toc_entry(&te)?;
     }
