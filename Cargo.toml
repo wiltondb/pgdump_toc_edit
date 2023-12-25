@@ -8,6 +8,11 @@ documentation = "https://docs.rs/pgdump_toc_rewrite"
 repository = "https://github.com/wiltondb/pgdump_toc_rewrite"
 readme = "README.md"
 categories = ["database"]
+description = "Command-line utility and a library that can be used to rewrite Babelfish logical DB name in pg_dump TOC and Babelfish catalog files"
+include = [
+    "src/*.rs",
+    "Cargo.toml",
+]
 
 [dependencies]
 chrono = "0.4.30"
