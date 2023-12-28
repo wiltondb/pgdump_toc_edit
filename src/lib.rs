@@ -124,6 +124,7 @@ fn rewrite_bbf_authid_user_ext(ctx: &TocCtx, dir_path: &Path) -> Result<(), TocE
     let filename = ctx.catalog_filename("babelfish_authid_user_ext")?;
     rewrite_catalog(dir_path, &filename, ctx.header.compression, |mut rec| {
         replace_record_rolname(ctx, &mut rec, 0)?;
+        replace_record_dbname(ctx, &mut rec, 11)?;
         Ok(rec)
     })?;
     Ok(())
@@ -249,6 +250,8 @@ fn collect_schema_and_owner(ctx: &mut TocCtx, te: &TocEntry) -> Result<(), TocEr
         if schema_orig.ends_with(dbo_suffix) {
             ctx.orig_dbname = schema_orig.chars().take(schema_orig.len() - dbo_suffix.len()).collect();
             ctx.orig_dbname_with_underscore = format!("{}_", &ctx.orig_dbname);
+            // _dbo owner may not be present if custom schemas are not used
+            ctx.owners.insert(format!("{}_dbo", ctx.orig_dbname), format!("{}_dbo", ctx.dest_dbname));
         } else {
             return Err(TocError::from_str("Cannot determine schema name"))
         }
