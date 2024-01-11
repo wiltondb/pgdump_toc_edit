@@ -1,0 +1,23 @@
+name: "Linux"
+
+on: workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: clone-repository
+        uses: actions/checkout@v3
+      - name: build
+        run: |
+          . ~/.cargo/env
+          rustup update
+          rustup target add x86_64-unknown-linux-musl
+          cargo build --release --target=x86_64-unknown-linux-musl
+      - name: upload-dist
+        if: true
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: target/x86_64-unknown-linux-musl/release/pgdump_toc_rewrite
+          retention-days: 1
