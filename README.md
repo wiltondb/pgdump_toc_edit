@@ -1,6 +1,8 @@
 pg_dump TOC rewrite utility
 ===========================
 
+![crates.io](https://img.shields.io/crates/v/pgdump_toc_rewrite.svg)
+
 Command-line utility and a library that can be used to rewrite Babelfish logical DB name in `pg_dump` TOC and Babelfish catalog files.
 
 License information
