@@ -47,7 +47,7 @@ impl<R: Read> TocReader<R> {
     pub(crate) fn read_version(&mut self) -> Result<Vec<u8>, TocError> {
         let mut buf  = utils::zero_vec(3usize);
         self.reader.read_exact( buf.as_mut_slice())?;
-        if 1u8 != buf[0] && 14u8 != buf[1] {
+        if 1u8 != buf[0] || 14u8 != buf[1] {
             return Err(TocError::from_str("Version check failure"))
         }
         Ok(buf)
