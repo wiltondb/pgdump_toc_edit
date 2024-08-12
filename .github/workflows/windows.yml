@@ -9,7 +9,7 @@ jobs:
       - name: clone-repository
         uses: actions/checkout@v3
       - name: build
-        run: cargo build --release
+        run: cmd /c ".github\scripts\windows-build.bat"
       - name: upload-dist
         if: true
         uses: actions/upload-artifact@v3
