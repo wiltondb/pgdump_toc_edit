@@ -66,10 +66,12 @@ struct TocCtx {
 }
 
 impl TocCtx {
-    fn new(header: TocHeader, dbname: &str) -> Self {
+    fn new(header: TocHeader, orig_dbname: &str, dest_dbname: &str) -> Self {
         Self {
             header,
-            dest_dbname: dbname.to_string(),
+            orig_dbname: orig_dbname.to_string(),
+            orig_dbname_with_underscore: format!("{}_", orig_dbname),
+            dest_dbname: dest_dbname.to_string(),
             ..Default::default()
         }
     }
@@ -245,17 +247,6 @@ fn replace_namespace(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), TocError> {
 
 fn collect_schema_and_owner(ctx: &mut TocCtx, te: &TocEntry) -> Result<(), TocError> {
     let schema_orig = te.tag.to_string()?;
-    let dbo_suffix = "_dbo";
-    if ctx.orig_dbname.is_empty() {
-        if schema_orig.ends_with(dbo_suffix) {
-            ctx.orig_dbname = schema_orig.chars().take(schema_orig.len() - dbo_suffix.len()).collect();
-            ctx.orig_dbname_with_underscore = format!("{}_", &ctx.orig_dbname);
-            // _dbo owner may not be present if custom schemas are not used
-            ctx.owners.insert(format!("{}_dbo", ctx.orig_dbname), format!("{}_dbo", ctx.dest_dbname));
-        } else {
-            return Err(TocError::from_str("Cannot determine schema name"))
-        }
-    }
     if !schema_orig.starts_with(&ctx.orig_dbname_with_underscore) {
         return Err(TocError::new(&format!("Unexpected schema name: {}", schema_orig)));
     }
@@ -394,6 +385,47 @@ fn reorder_babelfish_catalogs(entries: &mut Vec<TocEntry>) -> Result<(), TocErro
     Ok(())
 }
 
+fn longest_common_prefix(strs: &Vec<String>) -> String {
+    if strs.is_empty() {
+        return String::new();
+    }
+
+    // Start with the first string as the initial prefix
+    let mut prefix = strs[0].to_string();
+
+    // Compare the prefix with each string in the list
+    for s in &strs[1..] {
+        while !s.starts_with(&prefix) {
+            // Shorten the prefix until it matches
+            prefix.pop();
+            if prefix.is_empty() {
+                return String::new();
+            }
+        }
+    }
+
+    prefix
+}
+
+fn find_out_orig_dbname(entries: &Vec<TocEntry>) -> Result<String, TocError> {
+    let mut schemas = Vec::new();
+    for te in entries {
+        let description = te.description.to_string()?;
+        if "SCHEMA" == description {
+            let tag = te.tag.to_string()?;
+            schemas.push(tag);
+        }
+    }
+
+    let dbname_with_underscore = longest_common_prefix(&schemas);
+    if dbname_with_underscore.len() < 2 || !dbname_with_underscore.ends_with("_") {
+        return Err(TocError::from_str(&format!("Cannot determine original DB name, TOC schemas: {}", schemas.join(", "))));
+    }
+
+    let dbname = dbname_with_underscore.chars().take(dbname_with_underscore.len() - 1).collect();
+    Ok(dbname)
+}
+
 /// Reads `pg_dump` TOC as a JSON string.
 ///
 /// TOC file `toc.dat` is created by `pg_dump` when it is run with directory format (`-Z d` flag).
@@ -491,7 +523,10 @@ pub fn rewrite_toc<P: AsRef<Path>>(toc_path: P, dbname: &str) -> Result<(), TocE
     reorder_babelfish_catalogs(&mut entries)?;
 
     writer.write_header(&header)?;
-    let mut ctx = TocCtx::new(header, &dbname);
+    let orig_dbname = find_out_orig_dbname(&entries)?;
+    let mut ctx = TocCtx::new(header, &orig_dbname, &dbname);
+    // _dbo owner may not be present if custom schemas are not used
+    ctx.owners.insert(format!("{}_dbo", &orig_dbname), format!("{}_dbo", &dbname));
     for mut te in entries {
         modify_toc_entry(&mut ctx, &mut te)?;
         writer.write_toc_entry(&te)?;
