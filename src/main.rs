@@ -24,7 +24,7 @@ use clap::Command;
 fn main() {
     let args = Command::new("pg_dump TOC rewriter")
         .author("WiltonDB Software")
-        .version("1.0.4")
+        .version("1.0.5")
         .about("Changes Babelfish logical DB name in pg_dump files")
         .arg(Arg::new("dbname")
             .short('d')

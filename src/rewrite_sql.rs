@@ -28,7 +28,7 @@ fn location_to_idx(lines: &Vec<&str>, twl: &TokenWithLocation) -> usize {
     let TokenWithLocation{ token, location } = twl;
     let mut res = 0usize;
     for i in 0..location.line - 1 {
-        res += lines[i as usize].len();
+        res += lines[i as usize].chars().count();
     }
     res += (location.line - 1) as usize; // EOLs
     res += (location.column - 1) as usize;
@@ -95,12 +95,12 @@ fn rewrite_schema_in_sql_internal(schemas: &HashMap<String, String>,
         for ch in schema_replaced.chars() {
             rewritten.push(ch);
         }
-        let orig_check: String = orig.iter().skip(start_idx).take(schema_orig.len()).collect();
+        let orig_check: String = orig.iter().skip(start_idx).take(schema_orig.chars().count()).collect();
         if orig_check != *schema_orig {
             return Err(TocError::new(&format!(
                 "Replace error, sql: {}, location: {}", sql, start_idx)))
         }
-        last_idx = start_idx + schema_orig.len();
+        last_idx = start_idx + schema_orig.chars().count();
     }
 
     // tail
