@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-//use pgdump_toc_rewrite;
+use pgdump_toc_rewrite;
 
-//use std::collections::HashMap;
+use std::collections::HashMap;
 
-fn check_rewritten(_schema_from: &str, _schema_to: &str, _sql_from: &str, _sql_to: &str) {
+fn check_rewritten(schema_from: &str, schema_to: &str, sql_from: &str, sql_to: &str) {
     // uncomment me to enable testing
-    //let schemas = HashMap::from([(schema_from.to_string(), schema_to.to_string())]);
-    //let rewritten = pgdump_toc_rewrite::rewrite_schema_in_sql(&schemas, sql_from).unwrap();
-    //assert_eq!(rewritten, sql_to);
+    let schemas = HashMap::from([(schema_from.to_string(), schema_to.to_string())]);
+    let rewritten = pgdump_toc_rewrite::rewrite_schema_in_sql(&schemas, sql_from).unwrap();
+    assert_eq!(rewritten, sql_to);
+}
+
+fn check_rewritten_qualified_single_quoted(schema_from: &str, schema_to: &str, sql_from: &str, sql_to: &str) {
+    // uncomment me to enable testing
+    let schemas = HashMap::from([(schema_from.to_string(), schema_to.to_string())]);
+    let rewritten = pgdump_toc_rewrite::rewrite_schema_in_sql_qualified_single_quoted(&schemas, sql_from).unwrap();
+    println!("{}", rewritten);
+    assert_eq!(rewritten, sql_to);
 }
 
 #[test]
@@ -46,4 +54,8 @@ CREATE PROCEDURE bar42.fobar()
         select '$'
 END$_$;
 ");
+
+    check_rewritten_qualified_single_quoted("foo1", "bar42",
+            "SELECT pg_catalog.setval('foo1.foobar', 1, true);",
+            "SELECT pg_catalog.setval('bar42.foobar', 1, true);")
 }

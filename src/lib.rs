@@ -41,9 +41,6 @@ use serde_json;
 use keywords::KEYWORDS;
 use rewrite_catalog::rewrite_catalog;
 use rewrite_catalog::rewrite_catalog_all_at_once;
-use rewrite_sql::rewrite_schema_in_sql;
-use rewrite_sql::rewrite_schema_in_sql_single_quoted;
-use rewrite_sql::rewrite_schema_in_sql_unqualified;
 use toc_entry::TocEntry;
 use toc_entry::TocEntryJson;
 use toc_error::TocError;
@@ -52,6 +49,11 @@ use toc_header::TocHeaderJson;
 use toc_reader::TocReader;
 use toc_string::TocString;
 use toc_writer::TocWriter;
+
+pub use rewrite_sql::rewrite_schema_in_sql;
+pub use rewrite_sql::rewrite_schema_in_sql_single_quoted;
+pub use rewrite_sql::rewrite_schema_in_sql_unqualified;
+pub use rewrite_sql::rewrite_schema_in_sql_qualified_single_quoted;
 
 
 #[derive(Default, Debug, Clone)]
@@ -196,6 +198,15 @@ fn replace_schema_tstr_unqualified(schemas: &HashMap<String, String>, sql: &TocS
     Ok(TocString::from_string(sql_rewritten))
 }
 
+fn replace_schema_tstr_qualified_single_quoted(schemas: &HashMap<String, String>, sql: &TocString) -> Result<TocString, TocError> {
+    if sql.opt.is_none() {
+        return Ok(TocString::none())
+    };
+    let sql_st = sql.to_string()?;
+    let sql_rewritten = rewrite_schema_in_sql_qualified_single_quoted(schemas, &sql_st)?;
+    Ok(TocString::from_string(sql_rewritten))
+}
+
 fn replace_create_stmt(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), TocError> {
     te.create_stmt = replace_schema_tstr(&ctx.schemas, &te.create_stmt)?;
     Ok(())
@@ -203,6 +214,11 @@ fn replace_create_stmt(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), TocError> 
 
 fn replace_create_stmt_unqualified(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), TocError> {
     te.create_stmt = replace_schema_tstr_unqualified(&ctx.schemas, &te.create_stmt)?;
+    Ok(())
+}
+
+fn replace_create_stmt_qualified_single_quoted(ctx: &TocCtx, te: &mut TocEntry) -> Result<(), TocError> {
+    te.create_stmt = replace_schema_tstr_qualified_single_quoted(&ctx.schemas, &te.create_stmt)?;
     Ok(())
 }
 
@@ -290,6 +306,10 @@ fn modify_toc_entry(ctx: &mut TocCtx, te: &mut TocEntry) -> Result<(), TocError>
     } else if "ACL" == description && tag.starts_with("SCHEMA ") {
         replace_tag_unqualified(ctx, te)?;
         replace_create_stmt_unqualified(ctx, te)?;
+        replace_owner(ctx, te)?;
+    } else if "SEQUENCE SET" == description {
+        replace_create_stmt_qualified_single_quoted(ctx, te)?;
+        replace_namespace(ctx, te)?;
         replace_owner(ctx, te)?;
     } else {
         if "TABLE DATA" == description {

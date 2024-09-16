@@ -56,7 +56,7 @@ fn rewrite_schema_in_sql_internal(schemas: &HashMap<String, String>,
     };
     let mut to_replace: Vec<(&str, &str, usize)> = Vec::new();
     for i in 0..tokens.len() {
-        if qualified_only {
+        if qualified_only && !single_quoted_only {
             if i >= tokens.len() - 1 {
                 continue;
             }
@@ -72,8 +72,15 @@ fn rewrite_schema_in_sql_internal(schemas: &HashMap<String, String>,
         let TokenWithLocation{ token, .. } = twl;
         if single_quoted_only {
             if let Token::SingleQuotedString(st) = token {
-                if let Some(schema) = schemas.get(st.as_str()) {
-                    to_replace.push((st, schema, loc_idx));
+                let old_schema = if qualified_only {
+                    let idx = st.find('.').ok_or(TocError::new(&format!(
+                        "Unexpected unqualified single-quoted entry: {}", st)))?;
+                    &st[..idx]
+                } else {
+                    st
+                };
+                if let Some(schema) = schemas.get(old_schema) {
+                    to_replace.push((old_schema, schema, loc_idx));
                 }
             }
         } else {
@@ -112,14 +119,18 @@ fn rewrite_schema_in_sql_internal(schemas: &HashMap<String, String>,
     Ok(res)
 }
 
-pub(crate) fn rewrite_schema_in_sql(schemas: &HashMap<String, String>, sql: &str) -> Result<String, TocError> {
+pub fn rewrite_schema_in_sql(schemas: &HashMap<String, String>, sql: &str) -> Result<String, TocError> {
     rewrite_schema_in_sql_internal(schemas, sql, true, false)
 }
 
-pub(crate) fn rewrite_schema_in_sql_unqualified(schemas: &HashMap<String, String>, sql: &str) -> Result<String, TocError> {
+pub fn rewrite_schema_in_sql_unqualified(schemas: &HashMap<String, String>, sql: &str) -> Result<String, TocError> {
     rewrite_schema_in_sql_internal(schemas, sql, false, false)
 }
 
-pub(crate) fn rewrite_schema_in_sql_single_quoted(schemas: &HashMap<String, String>, sql: &str) -> Result<String, TocError> {
+pub fn rewrite_schema_in_sql_single_quoted(schemas: &HashMap<String, String>, sql: &str) -> Result<String, TocError> {
     rewrite_schema_in_sql_internal(schemas, sql, false, true)
+}
+
+pub fn rewrite_schema_in_sql_qualified_single_quoted(schemas: &HashMap<String, String>, sql: &str) -> Result<String, TocError> {
+    rewrite_schema_in_sql_internal(schemas, sql, true, true)
 }
